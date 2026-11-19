@@ -1,0 +1,29 @@
+<!doctype html><html lang="ru"><meta charset="utf-8"><title>mos-carousel-2 — tests</title>
+<style>body{font:16px/1.6 monospace;padding:32px} .pass{color:green}.fail{color:#c00}</style>
+<h1>Проверки орбиты</h1><div id="results"></div>
+<script type="module">
+const out=document.querySelector('#results');let failures=0,total=0;
+function test(name,fn){total++;try{fn();out.insertAdjacentHTML('beforeend',`<div class="pass">PASS ${name}</div>`)}catch(e){failures++;out.insertAdjacentHTML('beforeend',`<div class="fail">FAIL ${name}: ${e.message}</div>`)}}
+function assert(v,message='assertion failed'){if(!v)throw Error(message)}
+function near(a,b,t=1e-6){assert(Math.abs(a-b)<t,`${a} != ${b}`)}
+try {
+const {sampleOrbit,entrance,OrbitMotion}=await import('../orbit.js?v=2');
+test('Figma: первая карточка и крупный передний план',()=>{const a=sampleOrbit(0),b=sampleOrbit(7);near(a.x,641.5);near(a.y,182);near(a.w,101);near(b.x,569);near(b.y,581);near(b.w,350);assert(a.z<0&&b.z>0)});
+test('Замкнутая орбита и отрицательная фаза',()=>{for(const key of ['x','y','w','h','r','z']){near(sampleOrbit(.37)[key],sampleOrbit(10.37)[key]);near(sampleOrbit(-.63)[key],sampleOrbit(9.37)[key])}});
+test('Непрерывность шва орбиты',()=>{for(const key of ['x','y','w','h','r','z'])near(sampleOrbit(9.999999)[key],sampleOrbit(.000001)[key],.002)});
+test('До 0.75с карточки скрыты',()=>{for(let i=0;i<10;i++)near(entrance(.74,i).opacity,0)});
+test('Вступление раскрывает карточки последовательно',()=>{const states=Array.from({length:10},(_,i)=>entrance(1.1,i));assert(states.some(s=>s.opacity>0));assert(states.some(s=>s.opacity===0));assert(states.some(s=>s.expansion>1))});
+test('После 4.05с все карточки на орбите',()=>{for(let i=0;i<10;i++){const s=entrance(4.06,i);near(s.opacity,1);near(s.offset,0);near(s.expansion,1);near(s.yOffset,0)}});
+test('Перетаскивание влево двигает передние карточки влево',()=>{const a=new OrbitMotion();a.begin(0,0);a.move(-50,100);assert(sampleOrbit(7+a.phase).x<sampleOrbit(7).x)});
+test('Перетаскивание вправо двигает передние карточки вправо',()=>{const a=new OrbitMotion();a.begin(0,0);a.move(50,100);assert(sampleOrbit(7+a.phase).x>sampleOrbit(7).x)});
+test('Каждая карточка начинает вылет ниже нижнего края сцены',()=>{for(let i=0;i<10;i++){let first;for(let t=.75;t<4.05;t+=.001){const e=entrance(t,i);if(e.opacity>.01){first=e;break}}assert(first);const p=sampleOrbit(i-first.offset);const top=360+(p.y-360)*first.expansion+(first.yOffset??0)-p.h/2;assert(top>790,`card ${i}: top=${top}`)}});
+test('Геометрия во всех фазах конечна, размеры положительны',()=>{for(let p=-20;p<20;p+=.01){const s=sampleOrbit(p);assert(Object.values(s).every(Number.isFinite));assert(s.w>0&&s.h>0&&s.r>0)}});
+test('Автовращение не зависит от FPS',()=>{const a=new OrbitMotion(),b=new OrbitMotion();for(let i=0;i<600;i++)a.tick(1/60);for(let i=0;i<1200;i++)b.tick(1/120);near(a.phase,b.phase);assert(a.phase>0)});
+test('Drag останавливает автоматическое движение',()=>{const a=new OrbitMotion();a.begin(0,0);a.move(200,100);const p=a.phase;a.tick(.016);near(a.phase,p);assert(p!==0)});
+test('После отпускания сохраняется затухающая инерция',()=>{const a=new OrbitMotion();a.begin(0,0);a.move(200,100);a.end(100);const x=sampleOrbit(7+a.phase).x,v=a.velocity;a.tick(.016);assert(sampleOrbit(7+a.phase).x>x&&Math.abs(a.velocity)<Math.abs(v))});
+test('Reduced motion отключает автовращение, ручное работает',()=>{const a=new OrbitMotion({reduced:true});a.tick(1/60);near(a.phase,0);a.begin(0,0);a.move(200,100);assert(a.phase!==0)});
+test('Длинный кадр не вызывает скачок',()=>{const a=new OrbitMotion();a.tick(60);assert(a.phase<.01)});
+}catch(e){test('Модель орбиты доступна',()=>{throw e})}
+out.insertAdjacentHTML('beforeend',`<p id="summary">${total-failures}/${total} passed</p>`);
+document.title=`${failures?'FAIL':'PASS'} — ${total-failures}/${total}`;
+</script></html>

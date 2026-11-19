@@ -1,0 +1,49 @@
+<!doctype html><html lang="ru"><meta charset="utf-8"><title>Integration — running</title>
+<style>body{font:16px/1.5 monospace;padding:24px}.pass{color:green}.fail{color:#c00}iframe{width:1600px;height:900px;position:absolute;left:0;top:1100px;border:0}</style>
+<h1>Проверки экрана и таймлайна</h1><div id="results"></div>
+<script type="module">
+const out=document.querySelector('#results');let total=0,failures=0;
+function check(name,ok){total++;failures+=!ok;out.insertAdjacentHTML('beforeend',`<div class="${ok?'pass':'fail'}">${ok?'PASS':'FAIL'} ${name}</div>`)}
+const markup=await (await fetch('../index.html')).text();
+function create(reduced,slow=false){
+  const frame=document.createElement('iframe');
+  let source=markup.replace('<head>','<head><base href="../">');
+  if(reduced)source=source.replace('<head>','<head><script>const realMatchMedia=window.matchMedia.bind(window);window.matchMedia=q=>q.includes("prefers-reduced-motion")?{matches:true,addEventListener(type,fn){window.addEventListener("test-motion",e=>fn({matches:e.detail}))}}:realMatchMedia(q);<\/script>');
+  if(slow)source=source.replace('<head>','<head><script>const realRAF=window.requestAnimationFrame.bind(window);window.requestAnimationFrame=fn=>setTimeout(()=>realRAF(fn),150);<\/script>');
+  frame.srcdoc=source;document.body.append(frame);return frame;
+}
+const normal=create(false),reduced=create(true),slow=create(false,true),toggle=create(true);
+const wait=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+async function ready(frame){for(let i=0;i<1000;i++){if(frame.contentDocument?.body?.classList.contains('is-ready'))return;await wait(10)}throw Error('Loading timeout')}
+const slowCheck=(async()=>{await ready(slow);await wait(1300);check('Низкий FPS: карточки не отстают от текста',Array.from(slow.contentDocument.querySelectorAll('.card-product')).some(e=>+e.style.opacity>0))})();
+const toggleCheck=(async()=>{await ready(toggle);await wait(250);toggle.contentWindow.dispatchEvent(new toggle.contentWindow.CustomEvent('test-motion',{detail:false}));await wait(100);check('Выключение reduced motion не скрывает показанную композицию',Array.from(toggle.contentDocument.querySelectorAll('.card-product')).every(e=>+e.style.opacity===1)&&+toggle.contentWindow.getComputedStyle(toggle.contentDocument.querySelector('h1')).opacity===1)})();
+try{
+await ready(normal);
+const doc=normal.contentDocument,win=normal.contentWindow;
+const opacity=selector=>+win.getComputedStyle(doc.querySelector(selector)).opacity;
+const cards=()=>[...doc.querySelectorAll('.card-product')];
+await wait(250);
+check('Заголовок появляется первым',opacity('h1')>0&&opacity('.intro')===0&&cards().every(e=>+e.style.opacity===0));
+await wait(350);
+check('До 0.75с карточки скрыты',cards().every(e=>+e.style.opacity===0));
+await wait(550);
+check('Карточки раскрываются последовательно',cards().some(e=>+e.style.opacity>0)&&cards().some(e=>+e.style.opacity===0));
+check('Описание и якоря появляются вместе с карточками',opacity('.intro')>0&&opacity('.anchor-nav')>0);
+await wait(3300);
+check('После вступления все 10 карточек видимы',cards().length===10&&cards().every(e=>+e.style.opacity===1));
+check('Заголовок остаётся видимым',opacity('h1')===1);
+check('Все фотографии и иконки загружены',Array.from(doc.images).every(e=>e.complete&&e.naturalWidth>0));
+check('Есть карточки перед заголовком и за ним',cards().some(e=>+e.style.zIndex<20)&&cards().some(e=>+e.style.zIndex>20));
+check('Якоря и описание имеют шрифт 16px',win.getComputedStyle(doc.querySelector('.anchor-nav-item')).fontSize==='16px'&&win.getComputedStyle(doc.querySelector('.intro')).fontSize==='16px');
+check('Геометрия текста соответствует Figma',doc.querySelector('h1').offsetTop===65&&doc.querySelector('.intro').offsetTop===569&&doc.querySelector('.anchor-nav').offsetTop===79);
+const before=cards()[0].style.transform;await wait(200);
+check('После вступления вращение продолжается',cards()[0].style.transform!==before);
+await ready(reduced);
+const rd=reduced.contentDocument;
+check('Reduced motion: все элементы сразу видимы',rd.body.classList.contains('is-reduced')&&+reduced.contentWindow.getComputedStyle(rd.querySelector('h1')).opacity===1&&Array.from(rd.querySelectorAll('.card-product')).every(e=>+e.style.opacity===1));
+const staticBefore=rd.querySelector('.card-product').style.transform;await wait(150);
+check('Reduced motion: автоматическое вращение отключено',staticBefore===rd.querySelector('.card-product').style.transform);
+}catch(e){check(e.message,false)}
+await Promise.all([slowCheck,toggleCheck]);
+out.insertAdjacentHTML('beforeend',`<p>${total-failures}/${total} passed</p>`);document.title=`${failures?'FAIL':'PASS'} — integration ${total-failures}/${total}`;
+</script></html>
