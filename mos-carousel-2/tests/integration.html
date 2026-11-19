@@ -37,8 +37,8 @@ check('Есть карточки перед заголовком и за ним'
 check('Якоря и описание имеют шрифт 16px',win.getComputedStyle(doc.querySelector('.anchor-nav-item')).fontSize==='16px'&&win.getComputedStyle(doc.querySelector('.intro')).fontSize==='16px');
 check('Геометрия текста соответствует Figma',doc.querySelector('.title-line--top').offsetTop===80&&doc.querySelector('.title-line--bottom').offsetTop===330&&doc.querySelector('.intro').offsetTop===80&&doc.querySelector('.anchor-nav').offsetTop===255);
 check('Круассан находится между строками заголовка',+win.getComputedStyle(doc.querySelector('.title-line--top')).zIndex<+win.getComputedStyle(doc.querySelector('.croissant')).zIndex&&+win.getComputedStyle(doc.querySelector('.croissant')).zIndex<+win.getComputedStyle(doc.querySelector('.title-line--bottom')).zIndex);
-const ring=doc.querySelector('.scroll-text');
-check('Надпись вращается за 20с непрерывно, стрелка неподвижна',win.getComputedStyle(ring).animationDuration==='20s'&&win.getComputedStyle(ring).animationIterationCount==='infinite'&&win.getComputedStyle(doc.querySelector('.scroll-arrow')).animationName==='none');
+const ring=doc.querySelector('.scroll-cue-text');
+check('Надпись вращается за 20с непрерывно, стрелка неподвижна',win.getComputedStyle(ring).animationDuration==='20s'&&win.getComputedStyle(ring).animationIterationCount==='infinite'&&win.getComputedStyle(doc.querySelector('.scroll-cue-center')).animationName==='none');
 const ringBefore=win.getComputedStyle(ring).transform;
 const before=cards()[0].style.transform;await wait(200);
 check('Вращение текста меняет его положение',win.getComputedStyle(ring).transform!==ringBefore);
@@ -46,7 +46,7 @@ check('После вступления вращение продолжается
 await ready(reduced);
 const rd=reduced.contentDocument;
 check('Reduced motion: все элементы сразу видимы',rd.body.classList.contains('is-reduced')&&+reduced.contentWindow.getComputedStyle(rd.querySelector('.title-line')).opacity===1&&Array.from(rd.querySelectorAll('.card-product')).every(e=>+e.style.opacity>=.29));
-check('Reduced motion: текст кнопки неподвижен',reduced.contentWindow.getComputedStyle(rd.querySelector('.scroll-text')).animationName==='none');
+check('Reduced motion: текст кнопки неподвижен',reduced.contentWindow.getComputedStyle(rd.querySelector('.scroll-cue-text')).animationName==='none');
 const staticBefore=rd.querySelector('.card-product').style.transform;await wait(150);
 check('Reduced motion: автоматическое вращение отключено',staticBefore===rd.querySelector('.card-product').style.transform);
 }catch(e){check(e.message,false)}
