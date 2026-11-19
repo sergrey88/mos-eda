@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Всё о гастрономических проектах столицы, ярмарках и рыбных рынках.">
+  <title>Вкусная Москва</title>
+  <link rel="icon" href="data:,">
+  <link rel="preload" href="assets/fonts/dela-gothic-one.ttf" as="font" type="font/ttf" crossorigin>
+  <link rel="preload" href="assets/fonts/geologica.ttf" as="font" type="font/ttf" crossorigin>
+  <link rel="preload" href="assets/fonts/golos-text.ttf" as="font" type="font/ttf" crossorigin>
+  <link rel="stylesheet" href="styles.css">
+  <script src="interaction.js" defer></script>
+</head>
+<body>
+  <div class="artboard">
+    <header class="mos-header" aria-label="Портал mos.ru">
+      <div class="mos-logo"><img src="assets/mos-logo.svg" width="116" height="28" alt="mos.ru"></div>
+      <nav class="mos-nav" aria-label="Разделы портала">
+        <span>Новости<img src="assets/chevron-down.svg" width="16" height="16" alt=""></span>
+        <span>Услуги<img src="assets/chevron-down.svg" width="16" height="16" alt=""></span>
+        <span>Мосбилет<img src="assets/ticket.svg" width="16" height="16" alt=""></span>
+        <span>Мэр<img src="assets/chevron-down.svg" width="16" height="16" alt=""></span>
+        <span>Власть<img src="assets/chevron-down.svg" width="16" height="16" alt=""></span>
+        <span>Мосфото</span>
+        <span>Мой район<img src="assets/chevron-down.svg" width="16" height="16" alt=""></span>
+        <span>Помощь<img src="assets/chevron-down.svg" width="16" height="16" alt=""></span>
+        <span class="search"><img src="assets/search.svg" width="20" height="20" alt="Поиск"></span>
+      </nav>
+      <div class="mos-profile"><span>Елена Иванова</span><span class="profile-icon"><img src="assets/person.svg" width="20" height="20" alt="Личный кабинет"></span></div>
+    </header>
+
+    <main class="hero" aria-labelledby="hero-title">
+      <div class="intro">
+        <h1 id="hero-title">Вкусная<br>Москва</h1>
+        <p>Всё&nbsp;о&nbsp;гастрономических проектах<br>столицы, ярмарках и&nbsp;рыбных рынках,<br>а&nbsp;также рекомендации для&nbsp;любителей<br>готовить и&nbsp;вкусно поесть</p>
+      </div>
+
+      <div class="card-scene" aria-label="Гастрономические проекты Москвы">
+        <div class="card-wrap card-projects" data-depth-x="1.48" data-depth-y="1">
+          <button class="card" type="button" aria-label="Проекты" data-title="Проекты">
+            <img class="card-photo" src="assets/projects.png" alt="Приготовление блюда в ресторане" width="2880" height="3600" draggable="false">
+            <span class="card-label">Проекты</span>
+          </button>
+        </div>
+        <div class="card-wrap card-made" data-depth-x="1" data-depth-y="1">
+          <button class="card" type="button" aria-label="Сделано в Москве" data-title="Сделано в Москве">
+            <img class="card-photo" src="assets/made-in-moscow.jpg" alt="Десерты с малиной московского производства" width="985" height="1440" draggable="false">
+            <span class="card-label">Сделано<br>в&nbsp;Москве</span>
+          </button>
+        </div>
+        <div class="card-wrap card-recipes" data-depth-x="0.89" data-depth-y="1.22">
+          <button class="card" type="button" aria-label="Рецепты" data-title="Рецепты">
+            <img class="card-photo" src="assets/recipes.jpg" alt="Пирог с золотистой корочкой" width="1000" height="667" draggable="false">
+            <span class="card-label">Рецепты</span>
+          </button>
+        </div>
+        <div class="card-wrap card-fairs" data-depth-x="1" data-depth-y="1">
+          <button class="card" type="button" aria-label="Московские ярмарки" data-title="Московские ярмарки">
+            <img class="card-photo" src="assets/fairs.jpg" alt="Свежие овощи на московской ярмарке" width="1376" height="768" draggable="false">
+            <span class="card-label">Московские<br>ярмарки</span>
+          </button>
+        </div>
+        <div class="card-wrap card-fish" data-depth-x="1" data-depth-y="1">
+          <button class="card" type="button" aria-label="Рыбные рынки" data-title="Рыбные рынки">
+            <img class="card-photo" src="assets/fish-markets.jpg" alt="Филе лосося на льду" width="2100" height="1400" draggable="false">
+            <span class="card-label">Рыбные рынки</span>
+          </button>
+        </div>
+      </div>
+    </main>
+  </div>
+  <div class="hover-title" aria-hidden="true"></div>
+  <div class="cursor" aria-hidden="true"><span>Подробнее</span></div>
+</body>
+</html>

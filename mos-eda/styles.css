@@ -1,0 +1,237 @@
+@font-face {
+  font-family: "Dela Gothic One";
+  src: url("assets/fonts/dela-gothic-one.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Geologica";
+  src: url("assets/fonts/geologica.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Golos Text";
+  src: url("assets/fonts/golos-text.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  color-scheme: light;
+  --red: #df2836;
+  --scale: 1;
+  --hover-ease: cubic-bezier(.667, .325, .355, 1);
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  background: #fff;
+}
+
+body { color: #13151a; }
+
+/* One desktop composition; no breakpoints or mobile rearrangement. */
+.artboard {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 1600px;
+  height: 1210px;
+  transform: translateX(-50%) scale(var(--scale));
+  transform-origin: top center;
+  overflow: visible;
+  background: #fff;
+}
+
+.mos-header {
+  position: absolute;
+  inset: 0 0 auto;
+  z-index: 100;
+  height: 64px;
+  padding: 0 88px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  border-bottom: 1px solid #e2e3e6;
+  background: #fff;
+  font: 400 16px/1.25 "Golos Text", sans-serif;
+  white-space: nowrap;
+}
+
+.mos-logo { flex: 0 0 132px; }
+.mos-logo img, .mos-header span img { display: block; flex-shrink: 0; }
+.mos-nav { display: flex; align-items: center; gap: 16px; }
+.mos-nav > span { display: flex; align-items: center; gap: 4px; }
+.mos-nav .search { padding: 10px 0; }
+.mos-profile { margin-left: auto; display: flex; gap: 12px; align-items: center; }
+.profile-icon { padding: 10px; border: 1px solid #f5f6f7; border-radius: 8px; background: #f5f6f7; }
+
+.hero {
+  position: absolute;
+  left: 0;
+  top: 61px;
+  width: 100%;
+  height: calc(100% - 61px);
+}
+
+.intro h1, .intro p {
+  z-index: 10;
+  pointer-events: none;
+}
+
+.intro h1 {
+  position: absolute;
+  left: calc(50% - 1px);
+  top: 103px;
+  transform: translateX(-50%);
+  margin: 0;
+  color: var(--red);
+  font: 400 140px/.9 "Dela Gothic One", sans-serif;
+  letter-spacing: -5.6px;
+  text-transform: uppercase;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.intro p {
+  position: absolute;
+  left: calc(50% - 202px);
+  top: 425px;
+  width: 400px;
+  margin: 0;
+  color: #000;
+  font: 400 20px/1.35 "Geologica", sans-serif;
+  font-variation-settings: "CRSV" 0, "SHRP" 0;
+  text-align: center;
+}
+
+.card-scene { position: absolute; top: 0; bottom: 0; left: calc(50% - 800px); width: 1600px; }
+
+.card-wrap {
+  position: absolute;
+  will-change: transform;
+  transform: translate3d(var(--move-x, 0px), var(--move-y, 0px), 0);
+}
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-end;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: var(--padding-top) var(--padding-x) var(--padding-bottom);
+  border: 0;
+  border-radius: 0;
+  overflow: hidden;
+  appearance: none;
+  isolation: isolate;
+  text-align: left;
+  color: #fff;
+  background: #fff;
+  cursor: none;
+  transform: scale(1);
+  transition: transform 300ms var(--hover-ease);
+}
+
+.card-photo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: -2; user-select: none; }
+.card::before { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(var(--gradient-angle, 178deg), transparent 53.38%, rgb(0 0 0 / .7) 98.611%); }
+.card-projects .card::before { display: none; }
+.card-label { font: 400 var(--label-size)/1 "Dela Gothic One", sans-serif; letter-spacing: var(--label-tracking); }
+.card-wrap.is-active { z-index: 50; }
+.card-wrap.is-active .card { transform: scale(1.4); }
+.card:focus-visible { outline: 3px solid var(--red); outline-offset: 6px; }
+
+.card-projects {
+  left: -170px; top: 78px; width: 341px; height: 477.4px; z-index: 1;
+  --padding-top: 26.189px; --padding-x: 26.189px; --padding-bottom: 39.283px;
+  --label-size: 39.283px; --label-tracking: -1.5713px;
+}
+.card-made {
+  left: 1443px; top: 55px; width: 239px; height: 343.062px; z-index: 2;
+  --padding-top: 18.297px; --padding-x: 18.297px; --padding-bottom: 27.445px;
+  --label-size: 27.445px; --label-tracking: -.8233px; --gradient-angle: 176.9499deg;
+}
+.card-recipes {
+  left: 1110px; top: 446px; width: 400px; height: 366px; z-index: 3;
+  --padding-top: 25.6px; --padding-x: 25.6px; --padding-bottom: 38.4px;
+  --label-size: 38.4px; --label-tracking: -.384px; --gradient-angle: 178.0546deg;
+}
+.card-fairs {
+  left: 74.23px; top: 499.5px; width: 393.12px; height: 432px; z-index: 4;
+  --padding-top: 27.648px; --padding-x: 27.648px; --padding-bottom: 41.472px;
+  --label-size: 41.472px; --label-tracking: -1.2442px; --gradient-angle: 177.6641deg;
+}
+.card-fish {
+  left: 615.418px; top: 614.67px; width: 567.164px; height: 380px; z-index: 5;
+  --padding-top: 34.03px; --padding-x: 34.03px; --padding-bottom: 51.045px;
+  --label-size: 51.045px; --label-tracking: -1.5313px; --gradient-angle: 178.5753deg;
+}
+
+.hover-title {
+  position: fixed;
+  z-index: 200;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: calc(1.35em + 32px);
+  overflow: hidden;
+  color: var(--red);
+  font: 400 12vw/.95 "Dela Gothic One", sans-serif;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: -.04em;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.hover-title-item {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  padding: 0 16px 16px;
+  opacity: 0;
+  transform: translate3d(0, 100%, 0);
+  transition: transform 500ms cubic-bezier(.22, 1, .36, 1), opacity 400ms ease;
+}
+.hover-title-item.is-visible { opacity: 1; transform: translate3d(0, 0, 0); }
+.cursor {
+  position: fixed;
+  z-index: 300;
+  left: 0;
+  top: 0;
+  width: 160px;
+  height: 160px;
+  margin: -80px 0 0 -80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: #fff;
+  color: var(--red);
+  font: 400 16px/1.35 "Dela Gothic One", sans-serif;
+  pointer-events: none;
+  opacity: 0;
+  transform: translate3d(-1000px, -1000px, 0);
+  transition: opacity 50ms;
+}
+.cursor.is-visible { opacity: 1; }
+
+@media (prefers-reduced-motion: reduce) {
+  .card, .hover-title-item { transition: none; }
+}
