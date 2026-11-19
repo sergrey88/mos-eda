@@ -5,31 +5,46 @@
 *{box-sizing:border-box}
 html,body{margin:0;width:100%;min-height:100%;background:#fff;color:#13151a}
 body{overflow-x:hidden}
-.artboard{position:absolute;left:0;top:0;width:1600px;height:851px;transform:scale(var(--scale,1));transform-origin:top left}
+.artboard{position:absolute;left:0;top:0;width:1600px;height:901px;transform:scale(var(--scale,1));transform-origin:top left}
 .mos-header{position:absolute;inset:0 0 auto;z-index:10;height:64px;padding:0 88px;display:flex;align-items:center;gap:24px;border-bottom:1px solid #e2e3e6;background:#fff;font:400 16px/1.25 "Golos Text",sans-serif;white-space:nowrap}
 .mos-logo{flex:0 0 132px}.mos-logo img,.mos-header span img{display:block;flex-shrink:0}
 .mos-nav{display:flex;align-items:center;gap:16px}.mos-nav>span{display:flex;align-items:center;gap:4px}.mos-nav .search{padding:10px 0}
 .mos-profile{margin-left:auto;display:flex;gap:12px;align-items:center}.profile-icon{padding:10px;border-radius:8px;background:#f5f6f7}
-.hero{position:absolute;left:0;top:61px;width:1600px;height:790px;isolation:isolate;overflow:hidden;touch-action:pan-y;outline:none;user-select:none;cursor:grab}
+.hero{position:absolute;left:0;top:61px;width:1600px;height:840px;isolation:isolate;overflow:hidden;touch-action:pan-y;outline:none;user-select:none;cursor:grab}
 .hero:focus-visible{outline:2px solid #df2836;outline-offset:-4px}
 .hero.is-dragging{cursor:grabbing}
-h1{position:absolute;z-index:20;left:499.5px;top:65px;width:600px;margin:0;color:#df2836;font:600 280px/.8 "Roboto Flex",sans-serif;text-align:center;text-transform:uppercase;font-stretch:25%;font-variation-settings:"opsz" 144,"wdth" 25;letter-spacing:-1px;pointer-events:none}
+h1{margin:0;color:#df2836;font:600 280px/.8 "Roboto Flex",sans-serif;text-align:center;text-transform:uppercase;font-stretch:25%;font-variation-settings:"opsz" 144,"wdth" 25;letter-spacing:-1px;pointer-events:none}
+.title-line{position:absolute;left:499.5px;display:block;width:600px}
+.title-line--top{top:80px;z-index:20}
+.title-line--bottom{left:499px;top:330px;z-index:30}
+.croissant{position:absolute;z-index:25;left:565px;top:164px;width:489.208px;height:363.791px;pointer-events:none}
+.croissant img{display:block;width:100%;height:100%;-webkit-user-drag:none}
 .cards{display:contents}
 .card-product{position:absolute;left:0;top:0;overflow:hidden;opacity:0;will-change:transform,opacity;pointer-events:none;background:#d9d9d9}
 .card-product img{display:block;width:100%;height:100%;object-fit:cover;-webkit-user-drag:none}
-.anchor-nav{position:absolute;z-index:40;left:83px;top:79px;display:flex;flex-direction:column;gap:20px;width:253px;cursor:default}
+.anchor-nav{position:absolute;z-index:60;left:83px;top:255px;display:flex;flex-direction:column;gap:20px;width:253px;cursor:default}
 .anchor-nav-item{display:flex;align-items:center;gap:8px;width:100%;margin:0;padding:0;border:0;background:none;color:#df2836;font:400 16px/20px "Geologica",sans-serif;font-variation-settings:"CRSV" 0,"SHRP" 0;text-align:left;white-space:nowrap;cursor:pointer}
 .anchor-nav-item::before{content:"";flex:0 0 auto;width:20px;height:2px;background:currentColor;transition:width 200ms ease}
 .anchor-nav-item span{flex-shrink:0}
 .anchor-nav-item:hover::before,.anchor-nav-item:focus-visible::before{width:40px}
 .anchor-nav-item:focus-visible{outline:1px solid currentColor;outline-offset:4px}
-.intro{position:absolute;z-index:40;left:1196px;top:569px;width:324px;margin:0;color:#000;font:400 16px/24px "Geologica",sans-serif;font-variation-settings:"CRSV" 0,"SHRP" 0;cursor:default}
-h1,.anchor-nav,.intro{opacity:0}
-.is-ready h1{animation:fade-up 900ms cubic-bezier(.22,1,.36,1) both}
-.is-ready .anchor-nav,.is-ready .intro{animation:fade-up 800ms 750ms cubic-bezier(.22,1,.36,1) both}
+.intro{position:absolute;z-index:60;left:83px;top:80px;width:324px;margin:0;color:#000;font:400 16px/24px "Geologica",sans-serif;font-variation-settings:"CRSV" 0,"SHRP" 0;cursor:default}
+.scroll-cue{position:absolute;z-index:60;left:1280.003px;top:695.998px;width:115.87px;height:115.866px;margin:0;padding:0;border:0;background:none;color:#000;cursor:pointer}
+.scroll-cue:focus-visible{outline:1px solid #df2836;outline-offset:8px;border-radius:50%}
+.scroll-text{position:absolute;inset:0;transform-origin:50% 50%}
+.scroll-lettering{position:absolute;left:6.098px;top:6.576px;width:104.551px;height:103.293px}
+.scroll-dot{position:absolute;left:64.423px;top:104.033px}
+.scroll-circle{position:absolute;left:27.544px;top:28.224px;width:60.099px;height:60.099px}
+.scroll-arrow{position:absolute;left:52.564px;top:48.709px;width:10.0592px;height:19.807px;display:flex;align-items:center;justify-content:center}
+.scroll-arrow img{display:block;flex-shrink:0;transform:rotate(90deg)}
+.title-line,.croissant,.anchor-nav,.intro,.scroll-cue{opacity:0}
+.is-ready .title-line,.is-ready .croissant{animation:fade-up 900ms cubic-bezier(.22,1,.36,1) both}
+.is-ready .anchor-nav,.is-ready .intro,.is-ready .scroll-cue{animation:fade-up 800ms 750ms cubic-bezier(.22,1,.36,1) both}
+.is-ready .scroll-text{animation:spin-clockwise 20s linear infinite}
 @keyframes fade-up{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:translateY(0)}}
-.is-paused h1,.is-paused .anchor-nav,.is-paused .intro{animation-play-state:paused}
-.error{position:absolute;z-index:50;left:400px;top:730px;width:800px;margin:0;font:16px/24px "Golos Text",sans-serif;text-align:center;color:#df2836}
-.is-reduced h1,.is-reduced .anchor-nav,.is-reduced .intro{animation:none;opacity:1;transform:none}
-.is-settled h1,.is-settled .anchor-nav,.is-settled .intro{animation:none;opacity:1;transform:none}
-@media(prefers-reduced-motion:reduce){.is-ready h1,.is-ready .anchor-nav,.is-ready .intro{animation:none;opacity:1;transform:none}.anchor-nav-item::before{transition:none}}
+@keyframes spin-clockwise{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+.is-paused .title-line,.is-paused .croissant,.is-paused .anchor-nav,.is-paused .intro,.is-paused .scroll-cue,.is-paused .scroll-text{animation-play-state:paused}
+.error{position:absolute;z-index:70;left:400px;top:790px;width:800px;margin:0;font:16px/24px "Golos Text",sans-serif;text-align:center;color:#df2836}
+.is-reduced .title-line,.is-reduced .croissant,.is-reduced .anchor-nav,.is-reduced .intro,.is-reduced .scroll-cue,.is-settled .title-line,.is-settled .croissant,.is-settled .anchor-nav,.is-settled .intro,.is-settled .scroll-cue{animation:none;opacity:1;transform:none}
+.is-reduced .scroll-text{animation:none}
+@media(prefers-reduced-motion:reduce){.is-ready .title-line,.is-ready .croissant,.is-ready .anchor-nav,.is-ready .intro,.is-ready .scroll-cue{animation:none;opacity:1;transform:none}.is-ready .scroll-text{animation:none}.anchor-nav-item::before{transition:none}}

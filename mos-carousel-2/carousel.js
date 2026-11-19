@@ -1,4 +1,4 @@
-import { sampleOrbit, entrance, OrbitMotion } from './orbit.js?v=2';
+import { sampleOrbit, entrance, OrbitMotion } from './orbit.js?v=4';
 
 const hero=document.querySelector('.hero');
 const cards=[...document.querySelectorAll('.card-product')];
@@ -9,7 +9,7 @@ let scale=1,ready=false,elapsed=reduced.matches?4.05:0,lastFrame=null,pointerId=
 function resize(){
   scale=innerWidth/1600;
   document.documentElement.style.setProperty('--scale',scale);
-  document.body.style.minHeight=`${851*scale}px`;
+  document.body.style.minHeight=`${901*scale}px`;
   // Rebase an active gesture so resizing cannot generate a rotation jump.
   if(motion.dragging)motion.lastX=lastClientX/scale;
 }
@@ -24,9 +24,9 @@ function render(){
     el.style.height=`${p.h.toFixed(3)}px`;
     el.style.borderRadius=`${p.r.toFixed(3)}px`;
     el.style.transform=`translate3d(${(x-p.w/2).toFixed(3)}px,${(y-p.h/2).toFixed(3)}px,0)`;
-    el.style.opacity=entry.opacity.toFixed(4);
+    el.style.opacity=(entry.opacity*p.a).toFixed(4);
     el.style.visibility=entry.opacity>.001?'visible':'hidden';
-    el.style.zIndex=p.z<0?Math.min(19,Math.round(20+p.z*10)):Math.max(21,Math.round(20+p.z*10));
+    el.style.zIndex=p.z<0?Math.min(19,Math.round(20+p.z*10)):Math.max(41,Math.round(40+p.z*10));
   });
 }
 

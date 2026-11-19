@@ -1,11 +1,11 @@
-// Coordinates are relative to the Figma scene at x0 / y61, 1600 × 790.
+// Coordinates are relative to the Figma scene at x0 / y61, 1600 × 840.
 // A periodic spline preserves the art-directed silhouette of the reference.
 const stops = [
-  [641.5,182,101,68,12,-.8], [789,138.5,74,49,12,-1],
-  [974.5,115,101,68,12,-.8], [1180,105,140,94,16,-.45],
-  [1358,204,180,120,16,0], [1280,308.5,220,147,20,.4],
-  [1014,497,290,194,20,.8], [569,581,350,234,20,1],
-  [259,472,200,134,16,.3], [426,275,154,102,16,-.3],
+  [553,326,204,136,0,-.8,.5], [752,216.5,74,49,0,-1,.3],
+  [974.5,130,101,68,0,-.8,.5], [1180,120,140,94,0,-.45,.7],
+  [1380,202,180,120,0,0,1], [1290,383.5,220,147,0,.4,1],
+  [1083,578,290,194,0,.8,1], [661,695,350,234,0,1,1],
+  [336,645,200,134,0,.3,1], [389,481,154,102,0,-.3,.7],
 ];
 const clamp = x => Math.max(0,Math.min(1,x));
 const smooth = x => { x=clamp(x);return x*x*(3-2*x); };
@@ -17,7 +17,7 @@ export function sampleOrbit(slot) {
     const [a,b,c,d]=points.map(point=>point[k]);
     return .5*(2*b+(-a+c)*t+(2*a-5*b+4*c-d)*t*t+(-a+3*b-3*c+d)*t*t*t);
   });
-  return Object.fromEntries(['x','y','w','h','r','z'].map((key,i)=>[key,values[i]]));
+  return Object.fromEntries(['x','y','w','h','r','z','a'].map((key,i)=>[key,values[i]]));
 }
 
 // Cubic-bezier(.22,1,.36,1), solved for x to keep the ONY entry cadence.
