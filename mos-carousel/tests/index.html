@@ -1,0 +1,16 @@
+<!doctype html><html lang="ru"><meta charset="utf-8"><title>Carousel motion tests</title>
+<pre id="results">Running…</pre><script type="module">
+import { CarouselMotion } from '../motion.js?v=4';
+const lines = [];
+function test(name, run) { try { run(); lines.push('PASS '+name); } catch (e) { lines.push('FAIL '+name+': '+e.message); } }
+function assert(condition, message) { if (!condition) throw new Error(message); }
+test('Auto rotation advances', () => { const m=new CarouselMotion(); m.tick(.016); assert(m.angle>0, 'angle should advance'); });
+test('Hover stops rotation', () => { const m=new CarouselMotion(); m.hovered=true; m.tick(.016); assert(m.angle===0, 'angle changed while hovered'); });
+test('Frame rate independent', () => { const a=new CarouselMotion(),b=new CarouselMotion(); for(let i=0;i<60;i++)a.tick(1/60); for(let i=0;i<120;i++)b.tick(1/120); assert(Math.abs(a.angle-b.angle)<.0001,'rotation depends on frame rate'); });
+test('Drag and release keeps inertia', () => {const m=new CarouselMotion(); m.begin(0,0); m.move(160,100); const before=m.angle; m.end(); m.tick(.016); assert(before>0 && m.angle>before && !m.dragging,'drag or inertia missing'); });
+test('Cancelled drag can resume automatic movement', () => {const m=new CarouselMotion();m.begin(0,0);m.end();m.tick(.016);assert(!m.dragging && m.angle>0,'drag stuck');});
+test('Reduced motion stays still but allows drag', () => {const m=new CarouselMotion({reduced:true});m.tick(.016);assert(m.angle===0,'auto rotation must stop');m.begin(0,0);m.move(100,100);assert(m.angle>0,'manual rotation must work');});
+test('Long frame is clamped', () => {const m=new CarouselMotion();m.tick(100);assert(m.angle>0 && m.angle<.02,'large frame caused jump');});
+document.getElementById('results').textContent=lines.join('\n');
+document.title=lines.some(l=>l.startsWith('FAIL'))?'FAIL — motion tests':'PASS — motion tests';
+</script></html>

@@ -1,0 +1,63 @@
+@font-face{font-family:"Roboto Flex";src:url("assets/fonts/roboto-flex.ttf") format("truetype");font-weight:100 1000;font-stretch:25% 151%;font-display:swap}
+@font-face{font-family:"Geologica";src:url("assets/fonts/geologica.ttf") format("truetype");font-weight:100 900;font-display:swap}
+@font-face{font-family:"Golos Text";src:url("assets/fonts/golos-text.ttf") format("truetype");font-weight:100 900;font-display:swap}
+@font-face{font-family:"Dela Gothic One";src:url("assets/fonts/dela-gothic-one.ttf") format("truetype");font-weight:400;font-display:swap}
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;min-height:100%;background:#fff;color:#13151a}
+body{overflow-x:hidden}
+.artboard{position:absolute;left:0;top:0;width:1600px;height:981px;transform:scale(var(--scale,1));transform-origin:top left}
+.mos-header{position:absolute;inset:0 0 auto;z-index:10;height:64px;padding:0 88px;display:flex;align-items:center;gap:24px;border-bottom:1px solid #e2e3e6;background:#fff;font:400 16px/1.25 "Golos Text",sans-serif;white-space:nowrap}
+.mos-logo{flex:0 0 132px}.mos-logo img,.mos-header span img{display:block;flex-shrink:0}
+.mos-nav{display:flex;align-items:center;gap:16px}.mos-nav>span{display:flex;align-items:center;gap:4px}.mos-nav .search{padding:10px 0}
+.mos-profile{margin-left:auto;display:flex;gap:12px;align-items:center}.profile-icon{padding:10px;border-radius:8px;background:#f5f6f7}
+.hero{position:absolute;top:64px;left:0;width:1600px;height:917px;isolation:isolate;overflow:hidden}
+h1{position:absolute;z-index:2;left:500px;top:62px;width:600px;margin:0;color:#df2836;font-family:"Roboto Flex",sans-serif;font-size:280px;font-style:normal;font-weight:600;line-height:80%;text-align:center;text-transform:uppercase;font-stretch:25%;font-variation-settings:"opsz" 144,"wdth" 25;letter-spacing:-1px;pointer-events:none}
+.intro{position:absolute;z-index:4;left:1196px;top:64px;margin:0;width:340px;font:400 16px/24px "Geologica",sans-serif;pointer-events:none;color:#000}
+.rear-scene,.front-scene{position:absolute;inset:0}.rear-scene{z-index:1;pointer-events:none;filter:blur(7px);opacity:.24}.front-scene{z-index:3;outline:none;touch-action:pan-y}.front-scene:focus-visible{outline:2px solid #df2836;outline-offset:-4px}.front-scene canvas,.rear-scene canvas{display:block;width:100%;height:100%}
+.front-scene.is-hovered{cursor:grab}.front-scene.is-dragging{cursor:grabbing}
+.error{position:absolute;left:400px;top:620px;width:800px;z-index:6;text-align:center;font:20px/1.4 "Golos Text",sans-serif}
+
+.anchor-nav {
+  position: absolute;
+  z-index: 5;
+  left: 83px;
+  top: 620px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 253px;
+}
+
+.anchor-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: #df2836;
+  font: 400 16px/20px "Geologica", sans-serif;
+  font-variation-settings: "CRSV" 0, "SHRP" 0;
+  text-align: left;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.anchor-nav-item::before {
+  content: "";
+  flex: 0 0 auto;
+  width: 20px;
+  height: 2px;
+  background: currentColor;
+  transition: width 200ms ease;
+}
+
+.anchor-nav-item span { flex-shrink: 0; }
+.anchor-nav-item:hover::before,
+.anchor-nav-item:focus-visible::before { width: 40px; }
+.anchor-nav-item:focus-visible { outline: 1px solid currentColor; outline-offset: 4px; }
+@media (prefers-reduced-motion: reduce) {
+  .anchor-nav-item::before { transition: none; }
+}
