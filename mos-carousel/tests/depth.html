@@ -1,0 +1,46 @@
+<!doctype html><html lang="ru"><meta charset="utf-8"><link rel="icon" href="data:,"><title>Depth transition regression</title><pre id="results">Running GPU regression…</pre>
+<script type="module">
+import * as THREE from '../vendor/three.module.js';
+import { createDepthMaterial } from '../depth-material.js?v=3';
+const output = document.querySelector('#results');
+try {
+  const renderer = new THREE.WebGLRenderer({ alpha: true });
+  renderer.setSize(32,32); renderer.setClearColor(0,0);
+  const scene = new THREE.Scene();
+  const camera = new THREE.OrthographicCamera(-16,16,16,-16,1,4000);
+  camera.position.z = 2000;
+  const image = document.createElement('canvas'); image.width=32;image.height=32;
+  image.getContext('2d').fillStyle='#fff';image.getContext('2d').fillRect(0,0,32,32);
+  const texture = new THREE.CanvasTexture(image);
+  const pass = { value: 0 };
+  const mesh = new THREE.Mesh(new THREE.PlaneGeometry(32,32),createDepthMaterial(texture,pass));scene.add(mesh);
+  const target = new THREE.WebGLRenderTarget(32,32);
+  const pixel = new Uint8Array(4);
+  const lines=[];
+  function sample(z, layer) {
+    mesh.position.z=z;pass.value=layer;
+    renderer.setRenderTarget(target);renderer.render(scene,camera);
+    renderer.readRenderTargetPixels(target,16,16,1,1,pixel);
+    return pixel[3]/255;
+  }
+  function test(name,run){try{run();lines.push('PASS '+name);}catch(e){lines.push('FAIL '+name+': '+e.message);}}
+  function assert(value,message){if(!value)throw new Error(message);}
+  test('No opacity jump across the old boundary, both layers',()=>{
+    for(const layer of [0,1])assert(Math.abs(sample(-.01,layer)-sample(.01,layer))<.02,'visible jump in layer '+layer);
+  });
+  test('Intermediate depths produce intermediate foreground opacity',()=>{
+    const a=sample(-400,1),b=sample(0,1),c=sample(500,1);
+    assert(a===0 && b>a+.05 && b<c-.05 && c>.98,'transition has no intermediate state');
+  });
+  test('Far cards stay on the rear layer; near cards stay in front',()=>{
+    assert(sample(-400,0)>.2 && sample(-400,1)===0,'far layer missing');
+    assert(sample(500,0)===0 && sample(500,1)>.98,'near layer missing');
+  });
+  test('Combined opacity stays continuous throughout the transition',()=>{
+    let last=null;
+    for(let z=-400;z<=500;z+=5){const rear=sample(z,0),front=sample(z,1),combined=front+rear*(1-front);if(last!==null)assert(Math.abs(combined-last)<.02,'opacity jump at depth '+z);last=combined;}
+  });
+  output.textContent=lines.join('\n');document.title=lines.some(x=>x.startsWith('FAIL'))?'FAIL — depth tests':'PASS — depth tests';
+  renderer.dispose(); target.dispose();mesh.geometry.dispose();mesh.material.dispose();texture.dispose();
+} catch(error){output.textContent='FAIL '+error.message;document.title='FAIL — depth tests';}
+</script></html>

@@ -13,7 +13,7 @@ body{overflow-x:hidden}
 .hero{position:absolute;top:64px;left:0;width:1600px;height:917px;isolation:isolate;overflow:hidden}
 h1{position:absolute;z-index:2;left:500px;top:62px;width:600px;margin:0;color:#df2836;font-family:"Roboto Flex",sans-serif;font-size:280px;font-style:normal;font-weight:600;line-height:80%;text-align:center;text-transform:uppercase;font-stretch:25%;font-variation-settings:"opsz" 144,"wdth" 25;letter-spacing:-1px;pointer-events:none}
 .intro{position:absolute;z-index:4;left:1196px;top:64px;margin:0;width:340px;font:400 16px/24px "Geologica",sans-serif;pointer-events:none;color:#000}
-.rear-scene,.front-scene{position:absolute;inset:0}.rear-scene{z-index:1;pointer-events:none;filter:blur(7px);opacity:.24}.front-scene{z-index:3;outline:none;touch-action:pan-y}.front-scene:focus-visible{outline:2px solid #df2836;outline-offset:-4px}.front-scene canvas,.rear-scene canvas{display:block;width:100%;height:100%}
+.rear-scene,.front-scene{position:absolute;inset:0}.rear-scene{z-index:1;pointer-events:none;filter:blur(7px);opacity:1}.front-scene{z-index:3;outline:none;touch-action:pan-y}.front-scene:focus-visible{outline:2px solid #df2836;outline-offset:-4px}.front-scene canvas,.rear-scene canvas{display:block;width:100%;height:100%}
 .front-scene.is-hovered{cursor:grab}.front-scene.is-dragging{cursor:grabbing}
 .error{position:absolute;left:400px;top:620px;width:800px;z-index:6;text-align:center;font:20px/1.4 "Golos Text",sans-serif}
 

@@ -1,5 +1,6 @@
 import * as THREE from './vendor/three.module.js';
 import { CarouselMotion } from './motion.js';
+import { createDepthMaterial } from './depth-material.js?v=3';
 
 // Composition coordinates follow the 1600 × 981 reference.
 const WIDTH = 1600, HEIGHT = 917;
@@ -66,13 +67,15 @@ async function init() {
   const ring = new THREE.Group();
   tilt.add(ring);
   const textures = await Promise.all(cards.map(createTexture));
+  const depthPass = { value: 0 };
   const meshes = textures.map((texture, index) => {
     // Each card is an actual cylinder segment, so its image and text bend together.
     const geometry = new THREE.CylinderGeometry(RADIUS, RADIUS, CARD_HEIGHT, 64, 1, true, -CARD_ARC / 2, CARD_ARC);
-    const material = new THREE.MeshBasicMaterial({ map: texture, side: THREE.DoubleSide, transparent: true });
+    const material = createDepthMaterial(texture, depthPass);
     const mesh = new THREE.Mesh(geometry, material);
     mesh.rotation.y = index * Math.PI * 2 / cards.length;
     mesh.userData.title = cards[index].title;
+    mesh.layers.enable(1);
     ring.add(mesh);
     return mesh;
   });
@@ -140,12 +143,12 @@ async function init() {
     frontMeshes.length = 0;
     for (const mesh of meshes) {
       center.set(0, 0, RADIUS).applyMatrix4(mesh.matrixWorld);
-      const front = center.z > 0;
-      mesh.layers.set(front ? 1 : 0);
-      mesh.material.opacity = front ? .3 + .7 * THREE.MathUtils.smoothstep(center.z, 0, 350) : 1;
-      if (front) frontMeshes.push(mesh);
+      // Picking stays restricted to front cards; rendering blends both passes per pixel.
+      if (center.z > 0) frontMeshes.push(mesh);
     }
+    depthPass.value = 0;
     camera.layers.set(0); renderers[0].render(scene, camera);
+    depthPass.value = 1;
     camera.layers.set(1); renderers[1].render(scene, camera);
   }
   requestAnimationFrame(frame);
