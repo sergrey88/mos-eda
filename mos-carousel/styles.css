@@ -62,4 +62,31 @@ h1{position:absolute;z-index:2;left:516px;top:71px;width:567px;margin:0;color:#d
   .anchor-nav-item::before { transition: none; }
 }
 
-.scroll-cue { position:absolute; z-index:5; left:89.533px; top:670.535px; pointer-events:none; }
+.scroll-cue {
+  position: absolute;
+  z-index: 5;
+  left: 89.533px;
+  top: 670.535px;
+  display: block;
+  width: 170px;
+  height: 170px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #000;
+  cursor: pointer;
+  transition: color 200ms ease;
+}
+.scroll-cue svg { display: block; }
+.scroll-cue-text {
+  transform-origin: 84.4727px 85.4648px;
+  animation: scroll-cue-spin 20s linear infinite;
+}
+.scroll-cue:hover, .scroll-cue:focus-visible { color: #df2836; }
+.scroll-cue:focus-visible { outline: 1px solid currentColor; outline-offset: 4px; border-radius: 50%; }
+@keyframes scroll-cue-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) {
+  .scroll-cue-text { animation: none; }
+  .scroll-cue { transition: none; }
+}
