@@ -1,6 +1,7 @@
 import * as THREE from './vendor/three.module.js';
 import { CarouselMotion } from './motion.js';
 import { createDepthMaterial } from './depth-material.js?v=3';
+import { calculateLayout } from './layout.js';
 
 // Composition coordinates follow the 1600 × 981 reference.
 const WIDTH = 1600, HEIGHT = 917;
@@ -17,9 +18,14 @@ const reduced = matchMedia('(prefers-reduced-motion: reduce)');
 const motion = new CarouselMotion({ reduced: reduced.matches });
 let scale = 1;
 function resize() {
-  scale = innerWidth / WIDTH;
-  document.documentElement.style.setProperty('--scale', scale);
-  document.body.style.height = `${981 * scale}px`;
+  const layout = calculateLayout(innerWidth, innerHeight);
+  scale = layout.sceneScale;
+  const style = document.documentElement.style;
+  style.setProperty('--scale', layout.headerScale);
+  style.setProperty('--hero-height', `${layout.heroLocalHeight}px`);
+  style.setProperty('--board-height', `${layout.boardLocalHeight}px`);
+  style.setProperty('--content-scale', layout.contentScale);
+  document.body.style.height = `${layout.pageHeight}px`;
 }
 resize();
 addEventListener('resize', resize);

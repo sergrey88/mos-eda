@@ -5,12 +5,12 @@
 *{box-sizing:border-box}
 html,body{margin:0;width:100%;min-height:100%;background:#fff;color:#13151a}
 body{overflow-x:hidden}
-.artboard{position:absolute;left:0;top:0;width:1600px;height:981px;transform:scale(var(--scale,1));transform-origin:top left}
+.artboard{position:absolute;left:0;top:0;width:1600px;height:var(--board-height,981px);transform:scale(var(--scale,1));transform-origin:top left}
 .mos-header{position:absolute;inset:0 0 auto;z-index:10;height:64px;padding:0 88px;display:flex;align-items:center;gap:24px;border-bottom:1px solid #e2e3e6;background:#fff;font:400 16px/1.25 "Golos Text",sans-serif;white-space:nowrap}
 .mos-logo{flex:0 0 132px}.mos-logo img,.mos-header span img{display:block;flex-shrink:0}
 .mos-nav{display:flex;align-items:center;gap:16px}.mos-nav>span{display:flex;align-items:center;gap:4px}.mos-nav .search{padding:10px 0}
 .mos-profile{margin-left:auto;display:flex;gap:12px;align-items:center}.profile-icon{padding:10px;border-radius:8px;background:#f5f6f7}
-.hero{position:absolute;top:64px;left:0;width:1600px;height:917px;isolation:isolate;overflow:hidden}
+.hero{position:absolute;top:64px;left:0;width:1600px;height:var(--hero-height,917px);isolation:isolate;overflow:hidden}
 h1{position:absolute;z-index:2;left:516px;top:71px;width:567px;margin:0;color:#df2836;font-family:"Roboto Flex",sans-serif;font-size:280px;font-style:normal;font-weight:600;line-height:80%;text-align:center;text-transform:uppercase;font-stretch:25%;font-variation-settings:"GRAD" 0,"XOPQ" 96,"XTRA" 468,"YOPQ" 79,"YTAS" 750,"YTDE" -203,"YTFI" 738,"YTLC" 514,"YTUC" 712,"wdth" 25;letter-spacing:0;pointer-events:none}
 .intro{position:absolute;z-index:4;left:1170px;top:77px;margin:0;width:286px;font:300 18px/1.35 "Geologica",sans-serif;pointer-events:none;color:#000;font-variation-settings:"CRSV" 0,"SHRP" 0}
 .rear-scene,.front-scene{position:absolute;inset:0}.rear-scene{z-index:1;pointer-events:none;filter:blur(7px);opacity:1}.front-scene{z-index:3;outline:none;touch-action:pan-y}.front-scene:focus-visible{outline:2px solid #df2836;outline-offset:-4px}.front-scene canvas,.rear-scene canvas{display:block;width:100%;height:100%}
@@ -90,3 +90,5 @@ h1{position:absolute;z-index:2;left:516px;top:71px;width:567px;margin:0;color:#d
   .scroll-cue-text { animation: none; }
   .scroll-cue { transition: none; }
 }
+
+.hero-content { position:absolute; left:50%; top:50%; width:1600px; height:917px; transform:translate(-50%,-50%) scale(var(--content-scale,1)); transform-origin:center; }
