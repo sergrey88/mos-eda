@@ -1,0 +1,39 @@
+@font-face{font-family:"Roboto Flex";src:url("assets/fonts/roboto-flex.ttf") format("truetype");font-weight:100 1000;font-stretch:25% 151%;font-display:swap}
+@font-face{font-family:"Geologica";src:url("assets/fonts/geologica.ttf") format("truetype");font-weight:100 900;font-display:swap}
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;min-height:100%;background:#fceee3;color:#13151a}
+body{overflow-x:hidden}
+.artboard{position:absolute;left:var(--board-left,0px);top:64px;width:1600px;height:var(--board-height,840px);transform:scale(var(--scale,1));transform-origin:top left}
+.hero{position:absolute;left:0;top:0;width:1600px;height:var(--hero-height,840px);isolation:isolate;overflow:hidden;touch-action:pan-y;outline:none;user-select:none;cursor:grab}
+.hero:focus-visible{outline:2px solid #df2836;outline-offset:-4px}
+h1{position:absolute;top:80px;left:0;width:1598px;margin:0;z-index:20;color:#912c0e;font:600 356px/.8 "Roboto Flex",sans-serif;text-align:center;text-transform:uppercase;font-stretch:25%;font-optical-sizing:none;font-variation-settings:"opsz" 144,"wdth" 25,"GRAD" 0,"XOPQ" 96,"XTRA" 468,"YOPQ" 79,"YTAS" 750,"YTDE" -203,"YTFI" 738,"YTLC" 514,"YTUC" 712;pointer-events:none;white-space:nowrap}
+.title-line{display:block}
+.cards{display:contents}
+.card-product,.card-overlap{position:absolute;left:0;top:0;overflow:hidden;opacity:0;will-change:transform,opacity;pointer-events:none;background:#949494;z-index:40}
+.card-product img,.card-overlap img{position:absolute;inset:0;display:block;width:100%;height:100%;object-fit:cover;-webkit-user-drag:none}
+.anchor-nav{position:absolute;z-index:60;left:91px;top:385px;display:flex;flex-direction:column;gap:20px;width:253px;cursor:default}
+.anchor-nav-item{display:flex;align-items:center;gap:8px;width:100%;margin:0;padding:0;border:0;background:none;color:#912c0e;font:400 16px/16px "Geologica",sans-serif;font-variation-settings:"CRSV" 0,"SHRP" 0;text-align:left;white-space:nowrap;cursor:pointer}
+.anchor-nav-item::before{content:"";flex:0 0 auto;width:20px;height:2px;background:currentColor;transition:width 200ms ease}
+.anchor-nav-item span{flex-shrink:0}
+.anchor-nav-item:hover::before,.anchor-nav-item:focus-visible::before{width:40px}
+.anchor-nav-item:focus-visible{outline:1px solid currentColor;outline-offset:4px}
+.intro{position:absolute;z-index:60;left:1285px;top:385px;width:261px;margin:0;color:#000;font:400 16px/1.35 "Geologica",sans-serif;font-variation-settings:"CRSV" 0,"SHRP" 0;cursor:default}
+.scroll-cue{position:absolute;z-index:60;left:742px;top:686px;display:block;width:115.87px;height:115.866px;margin:0;padding:0;border:0;background:transparent;color:#912c0e;cursor:pointer;transition:color 200ms ease}
+.scroll-cue svg{display:block;width:100%;height:100%}
+.scroll-cue-text{transform-origin:84.4727px 85.4648px;animation:scroll-cue-spin 20s linear infinite}
+.scroll-cue:hover,.scroll-cue:focus-visible{color:#df2836}
+.scroll-cue:focus-visible{outline:1px solid currentColor;outline-offset:4px;border-radius:50%}
+@keyframes scroll-cue-spin{to{transform:rotate(360deg)}}
+.title-line,.croissant,.anchor-nav,.intro,.scroll-cue{opacity:0}
+.is-ready .title-line,.is-ready .croissant{animation:fade-up 900ms cubic-bezier(.22,1,.36,1) both}
+.is-cards-visible .anchor-nav,.is-cards-visible .intro,.is-cards-visible .scroll-cue{animation:fade-up 800ms cubic-bezier(.22,1,.36,1) both}
+@keyframes fade-up{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:translateY(0)}}
+.is-paused .title-line,.is-paused .croissant,.is-paused .anchor-nav,.is-paused .intro,.is-paused .scroll-cue,.is-paused .scroll-cue-text{animation-play-state:paused}
+.error{position:absolute;z-index:70;left:400px;top:790px;width:800px;margin:0;font:16px/24px "Geologica",sans-serif;text-align:center;color:#df2836}
+.is-reduced .title-line,.is-reduced .croissant,.is-reduced .anchor-nav,.is-reduced .intro,.is-reduced .scroll-cue,.is-settled .title-line,.is-settled .croissant,.is-settled .anchor-nav,.is-settled .intro,.is-settled .scroll-cue{animation:none;opacity:1;transform:none}
+.is-reduced .scroll-cue-text{animation:none}
+@media(prefers-reduced-motion:reduce){.is-ready .title-line,.is-ready .croissant,.is-ready .anchor-nav,.is-ready .intro,.is-ready .scroll-cue{animation:none;opacity:1;transform:none}.is-ready .scroll-cue-text{animation:none}.anchor-nav-item::before,.scroll-cue{transition:none}}
+
+.hero.is-dragging{cursor:grabbing}
+.card-product{clip-path:inset(0 0 0 50%);z-index:40}
+.card-overlap{clip-path:inset(0 50% 0 0);z-index:41}

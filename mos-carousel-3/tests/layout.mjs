@@ -1,0 +1,10 @@
+import assert from 'node:assert/strict';
+import {screenLayout} from '../motion.js';
+const near=(a,b)=>assert.ok(Math.abs(a-b)<.001,`${a} != ${b}`);
+let p=screenLayout(1600,904);near(p.scale,1);near(p.left,0);near(p.height,840);near(p.pageHeight,904);
+p=screenLayout(1600,800);near(p.scale,736/840);near(p.height*p.scale,736);assert.ok(p.left>0);near(p.left*2+1600*p.scale,1600);
+const min=screenLayout(1600,600);near(min.scale,p.scale);near(min.pageHeight,800);
+p=screenLayout(1600,1200);near(p.scale,1);near(p.height,1136);
+p=screenLayout(800,1000);near(p.scale,.5);near(p.left,0);near(p.height*p.scale+64,1000);
+p=screenLayout(1920,800);near(p.scale,736/840);near(p.left*2+1600*p.scale,1920);
+console.log('PASS: proportional height scaling, horizontal centering, 800px floor, tall/narrow viewports');

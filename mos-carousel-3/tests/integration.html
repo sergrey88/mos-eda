@@ -1,0 +1,39 @@
+<!doctype html><html lang="ru"><meta charset="utf-8"><title>Проверка — выполняется</title><style>body{font:16px/1.5 monospace}iframe{display:block;width:1024px;height:1000px;border:0}.pass{color:green}.fail{color:red}</style><h1>Проверка экрана</h1><div id="results"></div><script type="module">
+const out=document.querySelector('#results');let failed=0,total=0;
+function check(name,ok){total++;if(!ok)failed++;out.insertAdjacentHTML('beforeend',`<p class="${ok?'pass':'fail'}">${ok?'PASS':'FAIL'} ${name}</p>`)}
+const markup=await(await fetch('../index.html')).text();
+const f=document.createElement('iframe');
+f.srcdoc=markup.replace('<head>','<head><base href="../"><script>window.matchMedia=()=>({matches:true,addEventListener(){}})<\/script>');document.body.append(f);
+const wait=ms=>new Promise(r=>setTimeout(r,ms));
+for(let i=0;i<300&&!f.contentDocument?.body?.classList.contains('is-ready');i++)await wait(100);
+const doc=f.contentDocument,win=f.contentWindow;
+check('Ресурсы загружены',[...doc.images].every(i=>i.complete&&i.naturalWidth));
+check('11 карточек',doc.querySelectorAll('.card-product').length===11);
+check('Reduced motion: статичная композиция',doc.body.classList.contains('is-reduced'));
+check('Заголовок помещается в макет',doc.querySelector('.title-line').scrollWidth<=1598);
+check('Заголовок 356px',win.getComputedStyle(doc.querySelector('h1')).fontSize==='356px');
+check('Ссылки и описание по макету',doc.querySelector('.anchor-nav').offsetTop===385&&doc.querySelector('.intro').offsetLeft===1285);
+check('Надпись кнопки останавливается',win.getComputedStyle(doc.querySelector('.scroll-cue-text')).animationName==='none');
+const first=doc.querySelector('.card-product'),before=first.style.transform;await wait(150);check('Карточки не вращаются в reduced motion',first.style.transform===before);
+const normal=document.createElement('iframe');normal.src='../';document.body.append(normal);
+for(let i=0;i<300&&!normal.contentDocument?.body?.classList.contains('is-ready');i++)await wait(100);
+const entranceStarted=performance.now();
+await wait(250);let nd=normal.contentDocument,nw=normal.contentWindow;
+check('Сначала заголовок',+nw.getComputedStyle(nd.querySelector('.title-line')).opacity>0&&+nw.getComputedStyle(nd.querySelector('.intro')).opacity===0);
+for(let i=0;i<100&&!nd.body.classList.contains('is-cards-visible');i++){checkNoEarlyText();await wait(30)}
+check('Нет паузы после заголовка',nd.body.classList.contains('is-cards-visible')&&performance.now()-entranceStarted<1150);
+function checkNoEarlyText(){if(!nd.body.classList.contains('is-cards-visible')&&+nw.getComputedStyle(nd.querySelector('.intro')).opacity>0)throw Error('Текст появился до карточек')}
+await wait(100);check('Карточки появляются последовательно',[...nd.querySelectorAll('.card-product')].some(e=>+e.style.opacity>0)&&[...nd.querySelectorAll('.card-product')].some(e=>+e.style.opacity<1));
+check('Текст и кнопка появляются с карточками',['.intro','.anchor-nav','.scroll-cue'].every(s=>+nw.getComputedStyle(nd.querySelector(s)).opacity>0));
+await wait(4200);check('Вступление завершилось',nd.body.classList.contains('is-settled'));
+let c=nd.querySelector('.card-product'),b=c.style.transform;await wait(150);check('Вращение продолжается',b!==c.style.transform);
+check('Кнопка вращается за 20с',nw.getComputedStyle(nd.querySelector('.scroll-cue-text')).animationDuration==='20s');
+check('Высота сцены до нижнего края высокого окна',Math.abs(nd.querySelector('.hero').getBoundingClientRect().bottom-nw.innerHeight)<2);
+const halves=[...nd.querySelectorAll('.card-overlap')],cards=[...nd.querySelectorAll('.card-product')];
+check('Замкнутое перекрытие: две половины для каждой карточки',halves.length===11&&halves.every((h,i)=>h.style.transform===cards[i].style.transform&&nw.getComputedStyle(h).zIndex==='41'&&nw.getComputedStyle(cards[i]).zIndex==='40'));
+const hero=nd.querySelector('.hero');
+const manualBefore=c.style.transform;
+hero.dispatchEvent(new nw.KeyboardEvent('keydown',{key:'ArrowRight',bubbles:true}));
+check('Ручное вращение клавиатурой меняет положение',manualBefore!==c.style.transform);
+document.title=`${failed?'FAIL':'PASS'} ${total-failed}/${total}`;
+</script></html>
