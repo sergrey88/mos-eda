@@ -11,7 +11,7 @@ export class FishFocus{
  }
  tick(dt){
   if(!this.active||this.settled)return;
-  this.elapsed+=Math.max(0,dt);const p=Math.min(1,this.elapsed/.5);
+  this.elapsed+=Math.max(0,dt);const p=Math.min(1,this.elapsed/.7);
   this.rotation=this.from+(this.target-this.from)*p*(2-p);
   this.settled=p===1;
  }

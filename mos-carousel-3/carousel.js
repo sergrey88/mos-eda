@@ -1,6 +1,6 @@
 import {sampleOrbit,entrance,spinAt,entryStartAngle} from './orbit.js';
 import {DragMotion,screenLayout} from './motion.js';
-import {FishFocus} from './fish-focus.js?v=3-clockwise';
+import {FishFocus} from './fish-focus.js?v=4-clockwise-700';
 const hero=document.querySelector('.hero');
 const motion=new DragMotion();
 let scale=1,height=840,pointerId=null,lastClientX=0,ready=false,autoRotation=0,startAngle=-180;
