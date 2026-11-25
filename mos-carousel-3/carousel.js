@@ -1,5 +1,6 @@
 import {sampleOrbit,entrance,spinAt,entryStartAngle} from './orbit.js';
 import {DragMotion,screenLayout} from './motion.js';
+import {FishFocus} from './fish-focus.js';
 const hero=document.querySelector('.hero');
 const motion=new DragMotion();
 let scale=1,height=840,pointerId=null,lastClientX=0,ready=false,autoRotation=0,startAngle=-180;
@@ -8,7 +9,48 @@ const reduced=matchMedia('(prefers-reduced-motion: reduce)');
 const overlaps=cards.map(card=>{
  const copy=card.cloneNode(true);copy.className='card-overlap';card.after(copy);return copy;
 });
+const fishAnchor=[...document.querySelectorAll('.anchor-nav-item')].find(e=>e.textContent.trim()==='Рыбные рынки');
+const fishFocus=new FishFocus();
+let fishPointer=false,fishKeyboard=false,videoPending=false,videoGeneration=0;
+const fishVideos=[cards[5],overlaps[5]].map(card=>{
+ card.dataset.fishCard='';
+ const video=document.createElement('video');
+ video.src='assets/video/fish.mp4';video.muted=true;video.defaultMuted=true;
+ video.loop=true;video.playsInline=true;video.preload='metadata';
+ video.setAttribute('aria-hidden','true');card.append(video);return video;
+});
 let elapsed=reduced.matches?4.2:0,lastFrame=null;
+function fishRequested(){return fishPointer||fishKeyboard;}
+function beginFishFocus(){
+ release();motion.velocity=0;
+ fishFocus.enter(autoRotation+motion.rotation,reduced.matches);
+}
+function stopFishVideo(reset=true){
+ videoGeneration++;videoPending=false;hero.classList.remove('is-fish-playing');
+ for(const video of fishVideos){video.pause();if(reset&&video.readyState>0)video.currentTime=0;}
+}
+async function playFishVideo(){
+ if(videoPending||document.hidden)return;
+ videoPending=true;const generation=++videoGeneration;
+ try{
+  fishVideos[1].currentTime=fishVideos[0].currentTime;
+  await Promise.all(fishVideos.map(video=>video.play()));
+  if(generation!==videoGeneration)return;
+  if(fishRequested()&&fishFocus.active&&!document.hidden)hero.classList.add('is-fish-playing');
+  else stopFishVideo();
+ }catch{
+  if(generation===videoGeneration){stopFishVideo(false);videoPending=true;}
+  // Keep the original photo visible if playback is unavailable.
+ }
+}
+function updateFishFocus(){
+ if(!fishRequested()){fishFocus.leave();stopFishVideo();}
+ else if(ready&&elapsed>=4.2&&!fishFocus.active)beginFishFocus();
+}
+fishAnchor.addEventListener('pointerenter',()=>{fishPointer=true;updateFishFocus();});
+fishAnchor.addEventListener('pointerleave',()=>{fishPointer=false;updateFishFocus();});
+fishAnchor.addEventListener('focus',()=>{fishKeyboard=fishAnchor.matches(':focus-visible');updateFishFocus();});
+fishAnchor.addEventListener('blur',()=>{fishKeyboard=false;updateFishFocus();});
 function resize(){
  const layout=screenLayout(innerWidth,innerHeight);
  scale=layout.scale;height=layout.height;
@@ -41,8 +83,15 @@ function frame(time){
  if(!document.hidden){
   const dt=lastFrame===null?0:Math.max(0,(time-lastFrame)/1000);
   const previous=elapsed;elapsed+=dt;
-  if(!reduced.matches&&!motion.dragging)autoRotation+=spinAt(elapsed)-spinAt(previous);
-  motion.tick(dt);
+  if(fishRequested()&&elapsed>=4.2&&!fishFocus.active)beginFishFocus();
+  if(fishFocus.active){
+   fishFocus.tick(dt);autoRotation=fishFocus.rotation-motion.rotation;
+   if(fishFocus.settled&&!videoPending)playFishVideo();
+   if(hero.classList.contains('is-fish-playing')&&Math.abs(fishVideos[1].currentTime-fishVideos[0].currentTime)>.05)fishVideos[1].currentTime=fishVideos[0].currentTime;
+  }else{
+   if(!reduced.matches&&!motion.dragging)autoRotation+=spinAt(elapsed)-spinAt(previous);
+   motion.tick(dt);
+  }
   lastFrame=time;render();
   if(elapsed>=4.2)document.body.classList.add('is-settled');
  }else lastFrame=null;
@@ -50,13 +99,15 @@ function frame(time){
 }
 document.addEventListener('visibilitychange',()=>{
  lastFrame=null;document.body.classList.toggle('is-paused',document.hidden);
- if(document.hidden){release();motion.velocity=0;}
+ if(document.hidden){release();motion.velocity=0;stopFishVideo(false);}
 });
 reduced.addEventListener('change',()=>{
  release();motion.velocity=0;
  elapsed=Math.max(elapsed,4.2);lastFrame=null;
  document.body.classList.toggle('is-reduced',reduced.matches);
- document.body.classList.add('is-settled');render();
+ document.body.classList.add('is-settled');
+ if(fishFocus.active)fishFocus.enter(autoRotation+motion.rotation,reduced.matches);
+ render();
 });
 function release(event){
  if(event&&event.pointerId!==pointerId)return;
@@ -64,7 +115,7 @@ function release(event){
  if(captured!==null&&hero.hasPointerCapture(captured))hero.releasePointerCapture(captured);
 }
 hero.addEventListener('pointerdown',event=>{
- if(!ready||(!reduced.matches&&elapsed<4.2)||event.button!==0||pointerId!==null||event.target.closest('button,a,.intro'))return;
+ if(fishFocus.active||!ready||(!reduced.matches&&elapsed<4.2)||event.button!==0||pointerId!==null||event.target.closest('button,a,.intro'))return;
  pointerId=event.pointerId;lastClientX=event.clientX;motion.begin(event.clientX/scale,event.timeStamp);
  hero.setPointerCapture(pointerId);hero.classList.add('is-dragging');
 });
@@ -72,7 +123,7 @@ hero.addEventListener('pointermove',event=>{if(event.pointerId===pointerId){last
 for(const event of ['pointerup','pointercancel','lostpointercapture'])hero.addEventListener(event,release);
 hero.addEventListener('dragstart',event=>event.preventDefault());
 hero.addEventListener('keydown',event=>{
- if(event.target!==hero||!ready||(!reduced.matches&&elapsed<4.2)||!['ArrowLeft','ArrowRight'].includes(event.key))return;
+ if(fishFocus.active||event.target!==hero||!ready||(!reduced.matches&&elapsed<4.2)||!['ArrowLeft','ArrowRight'].includes(event.key))return;
  event.preventDefault();motion.rotation+=event.key==='ArrowRight'?12:-12;motion.velocity=0;render();
 });
 async function init(){

@@ -1,0 +1,32 @@
+<!doctype html><html lang="ru"><meta charset="utf-8"><title>Fish test — running</title><style>body{font:16px/1.5 monospace}.pass{color:green}.fail{color:red}iframe{width:1200px;height:900px;border:0}</style><h1>Fish hover</h1><div id="results"></div><script type="module">
+const out=document.querySelector('#results');let total=0,failed=0;
+const wait=ms=>new Promise(r=>setTimeout(r,ms));
+function check(name,ok){total++;if(!ok)failed++;out.insertAdjacentHTML('beforeend',`<p class="${ok?'pass':'fail'}">${ok?'PASS':'FAIL'} ${name}</p>`)}
+async function until(fn){for(let i=0;i<200;i++){if(fn())return;await wait(50)}throw Error('Timeout')}
+const frame=document.createElement('iframe');frame.src='../';document.body.append(frame);
+try{
+await until(()=>frame.contentDocument?.body?.classList.contains('is-settled'));
+const doc=frame.contentDocument,win=frame.contentWindow,hero=doc.querySelector('.hero');
+const anchor=[...doc.querySelectorAll('.anchor-nav-item')].find(e=>e.textContent.trim()==='Рыбные рынки');
+const videos=[...doc.querySelectorAll('video')],card=doc.querySelectorAll('.card-product')[5];
+const enter=()=>anchor.dispatchEvent(new win.PointerEvent('pointerenter'));
+const leave=()=>anchor.dispatchEvent(new win.PointerEvent('pointerleave'));
+enter();await until(()=>hero.classList.contains('is-fish-playing'));
+check('Two synchronized halves of one fish card',videos.length===2&&doc.querySelectorAll('.card-product').length===11);
+check('Muted, inline, loop playback',videos.every(v=>v.muted&&v.loop&&v.playsInline&&!v.paused&&v.videoWidth>0));
+const pose=card.style.transform,time=videos[0].currentTime;await wait(250);
+check('Carousel holds the upright fish',card.style.transform===pose&&/rotate\((-?360|0|360)deg\)/.test(pose));
+check('Video advances',videos[0].currentTime!==time);
+check('Split videos stay synchronized',Math.abs(videos[0].currentTime-videos[1].currentTime)<.08);
+check('Original photo stays available',card.querySelector('img').naturalWidth>0);
+leave();await until(()=>!hero.classList.contains('is-fish-playing')&&videos.every(v=>v.paused)&&+win.getComputedStyle(videos[0]).opacity===0);
+check('Leaving restores photo and pauses videos',!hero.classList.contains('is-fish-playing')&&videos.every(v=>v.paused)&&+win.getComputedStyle(videos[0]).opacity===0);
+const resumed=card.style.transform;await wait(150);check('Carousel resumes after leaving',resumed!==card.style.transform);
+enter();leave();enter();await until(()=>hero.classList.contains('is-fish-playing'));
+check('Rapid re-entry starts playback again',videos.every(v=>!v.paused));
+const duration=videos[0].duration;await wait((duration+.3)*1000);
+check('Video keeps playing after its duration',videos.every(v=>!v.paused&&!v.ended&&v.currentTime<v.duration));
+leave();
+}catch(e){check(e.message,false)}
+document.title=`${failed?'FAIL':'PASS'} ${total-failed}/${total} — fish`;
+</script></html>
