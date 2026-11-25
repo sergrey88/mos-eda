@@ -29,6 +29,18 @@ h1{margin:0;color:#df2836;font:600 280px/.8 "Roboto Flex",sans-serif;text-align:
   transform: translateY(30px) scale(.86);
   transition: opacity 650ms ease-in-out, transform 650ms cubic-bezier(.4, 0, .2, 1);
 }
+/* The individual translate property lets the drift run alongside the swap transform. */
+.is-ready .hero-food img {
+  animation: hero-food-float 6s ease-in-out 900ms infinite;
+}
+.is-paused .hero-food img {
+  animation-play-state: paused;
+}
+@keyframes hero-food-float {
+  0%, 100% { translate: 0 0; }
+  25% { translate: 0 -25px; }
+  75% { translate: 0 25px; }
+}
 .hero-food .hero-food-projects {
   inset: 30px auto auto 102px;
   width: 483px;
@@ -53,9 +65,11 @@ h1{margin:0;color:#df2836;font:600 280px/.8 "Roboto Flex",sans-serif;text-align:
   transform: none;
 }
 .is-reduced .hero-food img {
+  animation: none;
   transition: none;
 }
 @media (prefers-reduced-motion: reduce) {
+  .is-ready .hero-food img { animation: none; }
   .hero-food img { transition: none; }
 }
 .cards{display:contents}
