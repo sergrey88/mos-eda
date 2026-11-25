@@ -1,0 +1,126 @@
+@font-face {
+  font-family: Montserrat;
+  src: url("assets/fonts/Montserrat-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: Montserrat;
+  src: url("assets/fonts/Montserrat-Medium.ttf") format("truetype");
+  font-weight: 500;
+  font-display: swap;
+}
+
+.markets {
+  --markets-height: 636px;
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1600 / 636;
+  height: calc(var(--markets-height) * var(--page-scale));
+  overflow: clip;
+}
+
+.markets-content {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: var(--page-artboard-width);
+  height: var(--markets-height);
+  transform: translateX(-50%) scale(var(--page-scale, 1));
+  transform-origin: top center;
+}
+
+.markets-title,
+.markets-description,
+.markets-products,
+.markets-dish {
+  position: absolute;
+  margin: 0;
+}
+
+.markets-dish {
+  top: -98px;
+  left: 768px;
+  pointer-events: none;
+}
+
+.markets-title {
+  top: 107px;
+  left: calc(var(--page-grid-gutter) * 1px);
+  color: var(--accent);
+  font: 400 88px/1 "Dela Gothic One", sans-serif;
+  letter-spacing: -5.28px;
+  text-transform: uppercase;
+}
+
+.markets-description {
+  top: 319px;
+  left: 81px;
+  width: 478px;
+  font: 400 18px/1.3 Montserrat, sans-serif;
+  letter-spacing: -0.54px;
+}
+
+.markets-products {
+  top: 424px;
+  left: 81px;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  gap: 16px;
+  width: 715px;
+  padding: 0;
+  list-style: none;
+}
+
+.markets-product {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  height: 72px;
+}
+
+.markets-product-picture {
+  position: relative;
+  width: var(--picture-width);
+  height: 100%;
+}
+
+.markets-product-picture img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: block;
+  transform: translate(-50%, -50%);
+}
+
+.markets-product-label {
+  display: flex;
+  align-items: center;
+  height: 100%;
+  padding-right: 32px;
+  font: 500 20px/1 Montserrat, sans-serif;
+  letter-spacing: -0.6px;
+  white-space: nowrap;
+  margin-right: 0.6px;
+}
+
+.markets-product-meat { --picture-width: 89px; }
+.markets-product-produce { --picture-width: 61px; }
+.markets-product-cheese { --picture-width: 74px; }
+.markets-product-honey { --picture-width: 56px; }
+.markets-product-sausages { --picture-width: 60px; }
+.markets-product-prepared { --picture-width: 75px; }
+
+.markets-product-produce img {
+  top: calc(50% - 4.21px);
+  left: calc(50% + 1.8px);
+  width: 83.903px;
+  height: 83.903px;
+  transform: translate(-50%, -50%) rotate(-15.81deg);
+}
+
+.markets-product-prepared img {
+  left: calc(50% + 1px);
+}
