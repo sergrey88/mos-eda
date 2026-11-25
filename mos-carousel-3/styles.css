@@ -15,7 +15,7 @@ h1{position:absolute;top:80px;left:0;width:1598px;margin:0;z-index:20;color:#912
 .anchor-nav-item{display:flex;align-items:center;gap:8px;width:100%;margin:0;padding:0;border:0;background:none;color:#912c0e;font:400 16px/16px "Geologica",sans-serif;font-variation-settings:"CRSV" 0,"SHRP" 0;text-align:left;white-space:nowrap;cursor:pointer}
 .anchor-nav-item::before{content:"";flex:0 0 auto;width:20px;height:2px;background:currentColor;transition:width 200ms ease}
 .anchor-nav-item span{flex-shrink:0}
-.anchor-nav-item:hover{color:#000}
+.anchor-nav-item:hover{color:#df2836}
 .anchor-nav-item:hover::before,.anchor-nav-item:focus-visible::before{width:40px}
 .anchor-nav-item:focus-visible{outline:1px solid currentColor;outline-offset:4px}
 .intro{position:absolute;z-index:60;left:1285px;top:385px;width:261px;margin:0;color:#000;font:400 16px/1.35 "Geologica",sans-serif;font-variation-settings:"CRSV" 0,"SHRP" 0;cursor:default}
