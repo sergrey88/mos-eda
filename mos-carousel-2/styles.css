@@ -5,20 +5,54 @@
 *{box-sizing:border-box}
 html,body{margin:0;width:100%;min-height:100%;background:#fff;color:#13151a}
 body{overflow-x:hidden}
-.artboard{position:absolute;left:0;top:0;width:1600px;height:901px;transform:scale(var(--scale,1));transform-origin:top left}
-.mos-header{position:absolute;inset:0 0 auto;z-index:10;height:64px;padding:0 88px;display:flex;align-items:center;gap:24px;border-bottom:1px solid #e2e3e6;background:#fff;font:400 16px/1.25 "Golos Text",sans-serif;white-space:nowrap}
-.mos-logo{flex:0 0 132px}.mos-logo img,.mos-header span img{display:block;flex-shrink:0}
-.mos-nav{display:flex;align-items:center;gap:16px}.mos-nav>span{display:flex;align-items:center;gap:4px}.mos-nav .search{padding:10px 0}
-.mos-profile{margin-left:auto;display:flex;gap:12px;align-items:center}.profile-icon{padding:10px;border-radius:8px;background:#f5f6f7}
-.hero{position:absolute;left:0;top:61px;width:1600px;height:840px;isolation:isolate;overflow:hidden;touch-action:pan-y;outline:none;user-select:none;cursor:grab}
+.artboard{position:absolute;left:var(--board-left,0px);top:64px;width:1600px;height:var(--board-height,840px);transform:scale(var(--scale,1));transform-origin:top left}
+.hero{position:absolute;left:0;top:0;width:1600px;height:var(--board-height,840px);isolation:isolate;overflow:hidden;touch-action:pan-y;outline:none;user-select:none;cursor:grab}
 .hero:focus-visible{outline:2px solid #df2836;outline-offset:-4px}
 .hero.is-dragging{cursor:grabbing}
 h1{margin:0;color:#df2836;font:600 280px/.8 "Roboto Flex",sans-serif;text-align:center;text-transform:uppercase;font-stretch:25%;font-variation-settings:"opsz" 144,"wdth" 25;letter-spacing:-1px;pointer-events:none}
 .title-line{position:absolute;left:499.5px;display:block;width:600px}
 .title-line--top{top:80px;z-index:20}
 .title-line--bottom{left:499px;top:330px;z-index:30}
-.croissant{position:absolute;z-index:25;left:565px;top:164px;width:489.208px;height:363.791px;pointer-events:none}
-.croissant img{display:block;width:100%;height:100%;-webkit-user-drag:none}
+.hero-food {
+  position: absolute;
+  z-index: 25;
+  left: 509px;
+  top: 155px;
+  width: 600px;
+  height: 420px;
+  pointer-events: none;
+}
+.hero-food img {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transform: translateY(30px) scale(.86);
+  transition: opacity 650ms ease-in-out, transform 650ms cubic-bezier(.4, 0, .2, 1);
+}
+.hero-food .hero-food-default {
+  opacity: 1;
+  transform: none;
+}
+
+/* A hovered anchor takes precedence over keyboard focus. */
+.hero:has([data-food]:hover, [data-food]:focus-visible):not(:has(.anchor-nav-item:hover:not([data-food]))) .hero-food-default {
+  opacity: 0;
+  transform: translateY(30px) scale(.86);
+}
+.hero:has([data-food="fairs"]:hover, [data-food="fairs"]:focus-visible):not(:has(.anchor-nav-item:hover:not([data-food="fairs"]))) .hero-food-fairs,
+.hero:has([data-food="fish"]:hover, [data-food="fish"]:focus-visible):not(:has(.anchor-nav-item:hover:not([data-food="fish"]))) .hero-food-fish,
+.hero:has([data-food="made-in-moscow"]:hover, [data-food="made-in-moscow"]:focus-visible):not(:has(.anchor-nav-item:hover:not([data-food="made-in-moscow"]))) .hero-food-made-in-moscow,
+.hero:has([data-food="recipes"]:hover, [data-food="recipes"]:focus-visible):not(:has(.anchor-nav-item:hover:not([data-food="recipes"]))) .hero-food-recipes,
+.hero:has([data-food="projects"]:hover, [data-food="projects"]:focus-visible):not(:has(.anchor-nav-item:hover:not([data-food="projects"]))) .hero-food-projects {
+  opacity: 1;
+  transform: none;
+}
+.is-reduced .hero-food img {
+  transition: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-food img { transition: none; }
+}
 .cards{display:contents}
 .card-product{position:absolute;left:0;top:0;overflow:hidden;opacity:0;will-change:transform,opacity;pointer-events:none;background:#d9d9d9}
 .card-product img{display:block;width:100%;height:100%;object-fit:cover;-webkit-user-drag:none}
@@ -35,12 +69,12 @@ h1{margin:0;color:#df2836;font:600 280px/.8 "Roboto Flex",sans-serif;text-align:
 .scroll-cue:hover,.scroll-cue:focus-visible{color:#df2836}
 .scroll-cue:focus-visible{outline:1px solid currentColor;outline-offset:4px;border-radius:50%}
 @keyframes scroll-cue-spin{to{transform:rotate(360deg)}}
-.title-line,.croissant,.anchor-nav,.intro,.scroll-cue{opacity:0}
-.is-ready .title-line,.is-ready .croissant{animation:fade-up 900ms cubic-bezier(.22,1,.36,1) both}
+.title-line,.hero-food,.anchor-nav,.intro,.scroll-cue{opacity:0}
+.is-ready .title-line,.is-ready .hero-food{animation:fade-up 900ms cubic-bezier(.22,1,.36,1) both}
 .is-ready .anchor-nav,.is-ready .intro,.is-ready .scroll-cue{animation:fade-up 800ms 750ms cubic-bezier(.22,1,.36,1) both}
 @keyframes fade-up{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:translateY(0)}}
-.is-paused .title-line,.is-paused .croissant,.is-paused .anchor-nav,.is-paused .intro,.is-paused .scroll-cue,.is-paused .scroll-cue-text{animation-play-state:paused}
+.is-paused .title-line,.is-paused .hero-food,.is-paused .anchor-nav,.is-paused .intro,.is-paused .scroll-cue,.is-paused .scroll-cue-text{animation-play-state:paused}
 .error{position:absolute;z-index:70;left:400px;top:790px;width:800px;margin:0;font:16px/24px "Golos Text",sans-serif;text-align:center;color:#df2836}
-.is-reduced .title-line,.is-reduced .croissant,.is-reduced .anchor-nav,.is-reduced .intro,.is-reduced .scroll-cue,.is-settled .title-line,.is-settled .croissant,.is-settled .anchor-nav,.is-settled .intro,.is-settled .scroll-cue{animation:none;opacity:1;transform:none}
+.is-reduced .title-line,.is-reduced .hero-food,.is-reduced .anchor-nav,.is-reduced .intro,.is-reduced .scroll-cue,.is-settled .title-line,.is-settled .hero-food,.is-settled .anchor-nav,.is-settled .intro,.is-settled .scroll-cue{animation:none;opacity:1;transform:none}
 .is-reduced .scroll-cue-text{animation:none}
-@media(prefers-reduced-motion:reduce){.is-ready .title-line,.is-ready .croissant,.is-ready .anchor-nav,.is-ready .intro,.is-ready .scroll-cue{animation:none;opacity:1;transform:none}.is-ready .scroll-cue-text{animation:none}.anchor-nav-item::before,.scroll-cue{transition:none}}
+@media(prefers-reduced-motion:reduce){.is-ready .title-line,.is-ready .hero-food,.is-ready .anchor-nav,.is-ready .intro,.is-ready .scroll-cue{animation:none;opacity:1;transform:none}.is-ready .scroll-cue-text{animation:none}.anchor-nav-item::before,.scroll-cue{transition:none}}

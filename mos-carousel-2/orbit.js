@@ -1,18 +1,23 @@
 // Coordinates are relative to the Figma scene at x0 / y61, 1600 × 840.
 // A periodic spline preserves the art-directed silhouette of the reference.
 const stops = [
-  [553,326,204,136,0,-.8,.5], [752,216.5,74,49,0,-1,.3],
-  [974.5,130,101,68,0,-.8,.5], [1180,120,140,94,0,-.45,.7],
-  [1380,202,180,120,0,0,1], [1290,383.5,220,147,0,.4,1],
-  [1083,578,290,194,0,.8,1], [661,695,350,234,0,1,1],
-  [336,645,200,134,0,.3,1], [389,481,154,102,0,-.3,.7],
+  [717,238.5,140,93,0,-.8,.2], [827,188,120,80,0,-1,.3],
+  [974.5,130,101,68,0,-.9,.2], [1132,120,140,94,0,-.6,.5],
+  [1300,119.5,160,107,0,-.3,1], [1386,192,180,120,0,0,1],
+  [1352,347.5,220,147,0,.35,1], [1207,505,290,194,0,.7,1],
+  [995,633.5,310,207,0,.9,1], [684,695,350,234,0,1,1],
+  [389,677,260,174,0,.8,1], [331,530,216,144,0,.5,1],
+  [467,412,180,120,0,-.2,.5], [589,308,160,106,0,-.5,.4],
 ];
+export const CARD_COUNT=stops.length;
+// Keep the original 10-unit revolution: angular speed, drag and inertia are unchanged.
+export const cardPhase=index=>index*10/CARD_COUNT;
 const clamp = x => Math.max(0,Math.min(1,x));
 const smooth = x => { x=clamp(x);return x*x*(3-2*x); };
 const wrap = x => ((x%10)+10)%10;
 export function sampleOrbit(slot) {
-  const p=wrap(slot),i=Math.floor(p),t=p-i;
-  const points=[-1,0,1,2].map(offset=>stops[wrap(i+offset)]);
+  const p=wrap(slot)*CARD_COUNT/10,i=Math.floor(p),t=p-i;
+  const points=[-1,0,1,2].map(offset=>stops[(i+offset+CARD_COUNT)%CARD_COUNT]);
   const values=points[0].map((_,k)=>{
     const [a,b,c,d]=points.map(point=>point[k]);
     return .5*(2*b+(-a+c)*t+(2*a-5*b+4*c-d)*t*t+(-a+3*b-3*c+d)*t*t*t);
@@ -35,7 +40,7 @@ export function entrance(elapsed,index) {
   if(elapsed>=4.05)return {opacity:1,offset:0,expansion:1,yOffset:0};
   const travel=(1-formationEase((elapsed-.75)/3.3))*11.43;
   // Shift the reveal gate to the lower/front arc. The final orbit stays intact.
-  const order=(index+2)%10;
+  const order=(cardPhase(index)+2)%10;
   const reveal=clamp((order+1.43-travel)/1.43);
   const progress=smooth(reveal);
   return {opacity:progress,offset:travel,expansion:1+.75*(1-progress),yOffset:420*(1-progress)};

@@ -1,0 +1,21 @@
+<!doctype html><html lang="ru"><meta charset="utf-8"><title>Layout — running</title>
+<style>body{font:16px/1.6 monospace;padding:32px}.pass{color:green}.fail{color:#c00}</style>
+<h1>Масштабирование экрана</h1><div id="results"></div>
+<script type="module">
+let total=0,failures=0;const out=document.querySelector('#results');
+const assert=v=>{if(!v)throw Error('assertion failed')};
+const near=(a,b)=>assert(Math.abs(a-b)<.001);
+function test(name,fn){total++;try{fn();out.insertAdjacentHTML('beforeend',`<div class="pass">PASS ${name}</div>`)}catch(e){failures++;out.insertAdjacentHTML('beforeend',`<div class="fail">FAIL ${name}: ${e.message}</div>`)}}
+try{
+const {screenLayout}=await import('../layout.js?v=8');
+test('1600×904: исходный масштаб',()=>{const p=screenLayout(1600,904);near(p.scale,1);near(p.left,0);near(p.height,840);near(p.pageHeight,904)});
+test('1600×850: пропорциональное уменьшение по высоте',()=>{const p=screenLayout(1600,850);near(p.scale,(850-64)/840);near(p.height*p.scale+64,850);near(p.left*2+1600*p.scale,1600)});
+test('800px: минимальный масштаб по высоте',()=>{const p=screenLayout(1600,800);near(p.scale,736/840);near(p.pageHeight,800)});
+test('Ниже 800px масштаб не уменьшается',()=>{for(const h of [799,700,600,400]){const p=screenLayout(1600,h);near(p.scale,screenLayout(1600,800).scale);near(p.pageHeight,800)}});
+test('Высокий экран: блок занимает оставшуюся высоту',()=>{const p=screenLayout(1600,1200);near(p.scale,1);near(p.height,1136)});
+test('Узкое окно: пропорции ограничены шириной',()=>{const p=screenLayout(800,1000);near(p.scale,.5);near(p.left,0);near(p.height*p.scale+64,1000)});
+test('Широкое низкое окно: композиция по центру',()=>{const p=screenLayout(1920,800);near(p.scale,736/840);near(p.left*2+1600*p.scale,1920)});
+}catch(e){test('Модуль масштабирования доступен',()=>{throw e})}
+document.title=`${failures?'FAIL':'PASS'} — layout ${total-failures}/${total}`;
+out.insertAdjacentHTML('beforeend',`<p>${total-failures}/${total} passed</p>`);
+</script></html>

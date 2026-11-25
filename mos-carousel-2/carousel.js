@@ -1,4 +1,5 @@
-import { sampleOrbit, entrance, OrbitMotion } from './orbit.js?v=4';
+import { sampleOrbit, entrance, OrbitMotion, cardPhase } from './orbit.js?v=7';
+import { screenLayout } from './layout.js?v=8';
 
 const hero=document.querySelector('.hero');
 const cards=[...document.querySelectorAll('.card-product')];
@@ -7,9 +8,12 @@ const motion=new OrbitMotion({reduced:reduced.matches});
 let scale=1,ready=false,elapsed=reduced.matches?4.05:0,lastFrame=null,pointerId=null,lastClientX=0;
 
 function resize(){
-  scale=innerWidth/1600;
+  const layout=screenLayout(innerWidth,innerHeight);
+  scale=layout.scale;
   document.documentElement.style.setProperty('--scale',scale);
-  document.body.style.minHeight=`${901*scale}px`;
+  document.documentElement.style.setProperty('--board-left',`${layout.left}px`);
+  document.documentElement.style.setProperty('--board-height',`${layout.height}px`);
+  document.body.style.minHeight=`${layout.pageHeight}px`;
   // Rebase an active gesture so resizing cannot generate a rotation jump.
   if(motion.dragging)motion.lastX=lastClientX/scale;
 }
@@ -18,7 +22,7 @@ resize();addEventListener('resize',resize);
 function render(){
   cards.forEach((el,index)=>{
     const entry=motion.reduced?{opacity:1,offset:0,expansion:1,yOffset:0}:entrance(elapsed,index);
-    const p=sampleOrbit(index+motion.phase-entry.offset);
+    const p=sampleOrbit(cardPhase(index)+motion.phase-entry.offset);
     const x=800+(p.x-800)*entry.expansion,y=360+(p.y-360)*entry.expansion+entry.yOffset;
     el.style.width=`${p.w.toFixed(3)}px`;
     el.style.height=`${p.h.toFixed(3)}px`;
