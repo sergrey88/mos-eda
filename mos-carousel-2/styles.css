@@ -31,15 +31,14 @@ h1{margin:0;color:#df2836;font:600 280px/.8 "Roboto Flex",sans-serif;text-align:
 }
 /* The individual translate property lets the drift run alongside the swap transform. */
 .is-ready .hero-food img {
-  animation: hero-food-float 6s ease-in-out 900ms infinite;
+  animation: hero-food-float 6s ease-in-out -1500ms infinite;
 }
 .is-paused .hero-food img {
   animation-play-state: paused;
 }
 @keyframes hero-food-float {
-  0%, 100% { translate: 0 0; }
-  25% { translate: 0 -25px; }
-  75% { translate: 0 25px; }
+  0%, 100% { translate: 0 -10px; }
+  50% { translate: 0 10px; }
 }
 .hero-food .hero-food-projects {
   inset: 30px auto auto 102px;
