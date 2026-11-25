@@ -1,6 +1,6 @@
 import {sampleOrbit,entrance,spinAt,entryStartAngle} from './orbit.js';
 import {DragMotion,screenLayout} from './motion.js';
-import {FishFocus} from './fish-focus.js';
+import {FishFocus} from './fish-focus.js?v=2';
 const hero=document.querySelector('.hero');
 const motion=new DragMotion();
 let scale=1,height=840,pointerId=null,lastClientX=0,ready=false,autoRotation=0,startAngle=-180;
@@ -11,7 +11,7 @@ const overlaps=cards.map(card=>{
 });
 const fishAnchor=[...document.querySelectorAll('.anchor-nav-item')].find(e=>e.textContent.trim()==='Рыбные рынки');
 const fishFocus=new FishFocus();
-let fishPointer=false,fishKeyboard=false,videoPending=false,videoGeneration=0;
+let fishPointer=false,fishKeyboard=false,videoPending=false,videoGeneration=0,videoStopTimer=null;
 const fishVideos=[cards[5],overlaps[5]].map(card=>{
  card.dataset.fishCard='';
  const video=document.createElement('video');
@@ -26,11 +26,21 @@ function beginFishFocus(){
  fishFocus.enter(autoRotation+motion.rotation,reduced.matches);
 }
 function stopFishVideo(reset=true){
- videoGeneration++;videoPending=false;hero.classList.remove('is-fish-playing');
- for(const video of fishVideos){video.pause();if(reset&&video.readyState>0)video.currentTime=0;}
+ const generation=++videoGeneration;videoPending=false;
+ clearTimeout(videoStopTimer);videoStopTimer=null;
+ hero.classList.remove('is-fish-playing');
+ const finish=()=>{
+  if(generation!==videoGeneration)return;
+  for(const video of fishVideos){video.pause();if(reset&&video.readyState>0)video.currentTime=0;}
+  videoStopTimer=null;
+ };
+ // Keep the current moving frame through the fade, reset only once invisible.
+ if(reset&&!reduced.matches&&!document.hidden&&fishVideos.some(v=>!v.paused))videoStopTimer=setTimeout(finish,350);
+ else finish();
 }
 async function playFishVideo(){
  if(videoPending||document.hidden)return;
+ clearTimeout(videoStopTimer);videoStopTimer=null;
  videoPending=true;const generation=++videoGeneration;
  try{
   fishVideos[1].currentTime=fishVideos[0].currentTime;
