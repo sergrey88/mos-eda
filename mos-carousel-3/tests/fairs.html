@@ -1,0 +1,37 @@
+<!doctype html><html lang="ru"><meta charset="utf-8"><title>Проверка ярмарок — выполняется</title>
+<style>body{font:16px/1.5 monospace}iframe{width:1600px;height:904px;border:0}.pass{color:green}.fail{color:red}</style>
+<h1>Проверка перехода к ярмаркам</h1><div id="results"></div>
+<iframe src="../"></iframe><script type="module">
+const frame=document.querySelector('iframe'),out=document.querySelector('#results');
+let total=0,failed=0;
+const wait=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+function check(name,ok){total++;if(!ok)failed++;out.insertAdjacentHTML('beforeend',`<p class="${ok?'pass':'fail'}">${ok?'PASS':'FAIL'} ${name}</p>`)}
+for(let i=0;i<300&&!frame.contentDocument?.body?.classList.contains('is-ready');i++)await wait(100);
+const doc=frame.contentDocument,win=frame.contentWindow;
+const hero=doc.querySelector('.hero-cover'),intro=doc.querySelector('.market-intro'),backdrop=doc.querySelector('.market-backdrop'),content=doc.querySelector('.market-content-shell');
+const height=hero.getBoundingClientRect().height;
+const scale=+doc.documentElement.style.getPropertyValue('--scale');
+async function scroll(y){win.scrollTo(0,y);await wait(100)}
+check('Ярмарки скрыты до начала перехода',win.getComputedStyle(intro).opacity==='0');
+check('Масштаб совпадает с главным экраном',+doc.documentElement.style.getPropertyValue('--content-scale')===scale);
+check('Белый блок совпадает с сеткой главного экрана',Math.abs(content.getBoundingClientRect().left-doc.querySelector('.artboard').getBoundingClientRect().left-80*scale)<1);
+await scroll(height*.54);
+check('Фон закреплён под шапкой',Math.abs(backdrop.getBoundingClientRect().top-64)<1);
+const before=content.getBoundingClientRect().top;
+await scroll(height*.79);
+const opacity=+win.getComputedStyle(intro).opacity;
+await wait(900);
+check('Появление завершается без дополнительного скролла',opacity<1&&win.getComputedStyle(intro).opacity==='1');
+await scroll(height);
+check('Главный экран ушёл за шапку',Math.abs(hero.getBoundingClientRect().bottom-64)<1);
+check('Плашки статичные', [...doc.querySelectorAll('.market-category')].every(e=>e.tagName==='SPAN'&&!e.hasAttribute('tabindex')&&win.getComputedStyle(e).cursor==='default'));
+await scroll(height+150);
+check('После перехода фон движется со страницей',Math.abs(backdrop.getBoundingClientRect().top+86)<1);
+await scroll(height*.54);
+check('Обратный скролл возвращает положение блока',Math.abs(content.getBoundingClientRect().top-before)<1);
+await scroll(height+900);await wait(200);
+await Promise.all([...doc.querySelectorAll('.market-content img')].map(e=>e.decode().catch(()=>{})));
+check('Изображения новых блоков загружены',[...doc.querySelectorAll('.market-content img')].every(e=>e.naturalWidth>0));
+check('Нет горизонтального скролла',doc.documentElement.scrollWidth===doc.documentElement.clientWidth);
+document.title=`${failed?'FAIL':'PASS'} ${total-failed}/${total} ярмарки`;
+</script></html>

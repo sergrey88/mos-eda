@@ -62,7 +62,7 @@ fishAnchor.addEventListener('pointerleave',()=>{fishPointer=false;updateFishFocu
 fishAnchor.addEventListener('focus',()=>{fishKeyboard=fishAnchor.matches(':focus-visible');updateFishFocus();});
 fishAnchor.addEventListener('blur',()=>{fishKeyboard=false;updateFishFocus();});
 function resize(){
- const layout=screenLayout(innerWidth,innerHeight);
+ const layout=screenLayout(document.documentElement.clientWidth,innerHeight);
  scale=layout.scale;height=layout.height;
  document.documentElement.style.setProperty('--board-left',`${layout.left}px`);
  if(!ready)startAngle=entryStartAngle(Math.min(height,(innerHeight-64)/scale));
@@ -70,7 +70,9 @@ function resize(){
  document.documentElement.style.setProperty('--board-height',`${height}px`);
  document.documentElement.style.setProperty('--scale',scale);
  if(motion.dragging)motion.lastX=lastClientX/scale;
+ document.documentElement.style.setProperty('--hero-px',`${layout.pageHeight-64}px`);
  document.body.style.minHeight=`${layout.pageHeight}px`;
+ dispatchEvent(new Event('hero:resize')); 
 }
 resize();addEventListener('resize',resize);
 function render(){
@@ -141,7 +143,7 @@ async function init(){
   document.fonts.load('600 356px "Roboto Flex"'),
   document.fonts.load('400 16px "Geologica"'),
   document.fonts.load('400 16px "Golos Text"'),
-  ...[...document.images].map(img=>img.decode()),
+  ...[...document.querySelectorAll('#mos-header img,.hero img')].map(img=>img.decode()),
  ]);
  if(results.some(r=>r.status==='rejected')){
   const error=document.querySelector('.error');error.hidden=false;

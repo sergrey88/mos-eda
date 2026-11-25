@@ -7,7 +7,7 @@ f.srcdoc=markup.replace('<head>','<head><base href="../"><script>window.matchMed
 const wait=ms=>new Promise(r=>setTimeout(r,ms));
 for(let i=0;i<300&&!f.contentDocument?.body?.classList.contains('is-ready');i++)await wait(100);
 const doc=f.contentDocument,win=f.contentWindow;
-check('Ресурсы загружены',[...doc.images].every(i=>i.complete&&i.naturalWidth));
+check('Ресурсы загружены',[...doc.querySelectorAll('#mos-header img,.hero img')].every(i=>i.complete&&i.naturalWidth));
 check('11 карточек',doc.querySelectorAll('.card-product').length===11);
 check('Reduced motion: статичная композиция',doc.body.classList.contains('is-reduced'));
 check('Заголовок помещается в макет',doc.querySelector('.title-line').scrollWidth<=1598);

@@ -1,0 +1,58 @@
+@font-face{font-family:"Montserrat";src:url("assets/fonts/Montserrat-Medium.ttf") format("truetype");font-weight:500;font-display:swap}
+.page-story{position:relative}
+.hero-cover{position:absolute;top:0;left:0;width:100%;height:var(--hero-px,840px);z-index:2;background:#fceee3;overflow:hidden}
+.hero-cover .artboard{top:0}
+.hero-spacer{height:var(--hero-px,840px)}
+.market-backdrop-track{position:absolute;top:0;left:0;width:100%;height:var(--backdrop-track-height,1853px);z-index:0}
+.market-backdrop{position:sticky;top:64px;height:var(--backdrop-px,1013px);width:100%;overflow:hidden}
+.market-art{position:absolute;top:0;left:var(--market-left,0px);width:1600px;height:1013px;transform:scale(var(--content-scale,1));transform-origin:top left}
+.market-photo{position:absolute;inset:0;overflow:hidden;transform:scaleX(-1)}
+.market-photo>img{position:absolute;left:-40%;top:-19.25%;width:180%;height:119.25%;max-width:none;object-fit:cover}
+.market-photo-shade{position:absolute;inset:0;background:linear-gradient(-10.644399deg,rgba(50,31,17,0) 48.552%,rgba(50,31,17,.7) 87.639%)}
+.market-intro{position:absolute;inset:0;color:#fff;opacity:0;visibility:hidden;transform:translateY(60px);transition:opacity 800ms cubic-bezier(.22,1,.36,1),transform 800ms cubic-bezier(.22,1,.36,1);pointer-events:none}
+.market-intro.is-visible{opacity:1;visibility:visible;transform:translateY(0)}
+.market-intro h2{position:absolute;left:88px;top:104px;margin:0;text-transform:uppercase;font:600 200px/.8 "Roboto Flex",sans-serif;font-stretch:25%;font-variation-settings:"opsz" 144,"wdth" 25,"GRAD" 0,"XOPQ" 96,"XTRA" 468,"YOPQ" 79,"YTAS" 750,"YTDE" -203,"YTFI" 738,"YTLC" 514,"YTUC" 712}
+.market-intro-description{position:absolute;left:878px;top:177px;width:578px;margin:0;font:300 20px/1.35 "Geologica",sans-serif}
+.market-categories{position:absolute;left:80px;top:488px;display:flex;gap:16px;align-items:flex-start;white-space:nowrap}
+.market-category{display:flex;align-items:center;justify-content:center;height:80px;padding:16px 32px;border:1px solid #e8e8e8;border-radius:100px;background:rgba(0,0,0,.2);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);font:400 24px/1.35 "Geologica",sans-serif;letter-spacing:-.48px;cursor:default;pointer-events:auto}
+.market-content-shell{position:relative;z-index:3;width:calc(1440px * var(--content-scale,1));height:calc(var(--content-height,2144px) * var(--content-scale,1));margin:calc(613px * var(--content-scale,1)) auto 0;transform:translateY(var(--content-scroll-offset,0px))}
+.market-content{position:absolute;top:0;left:0;width:1440px;min-height:2144px;padding:120px 120px 96px;background:#fff;color:#171717;transform:scale(var(--content-scale,1));transform-origin:top left;font:400 16px/1.35 "Geologica",sans-serif}
+.market-content h2,.market-content h3,.market-content p{margin:0}
+.market-section-heading{display:grid;grid-template-columns:780px 364px;gap:48px;align-items:start;margin-left:4px}
+.market-section-heading h2{font:500 100px/.8 "Roboto Flex",sans-serif;text-transform:uppercase;color:#912c0e;white-space:nowrap;font-stretch:35%;font-variation-settings:"opsz" 144,"wdth" 35,"GRAD" 0,"XOPQ" 96,"XTRA" 468,"YOPQ" 79,"YTAS" 750,"YTDE" -203,"YTFI" 738,"YTLC" 514,"YTUC" 712}
+.market-section-description{padding-top:11px;font:300 16px/1.35 "Geologica",sans-serif}
+.offers-section{position:relative;min-height:773px}
+.offers-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:48px;width:1192px;margin:40px 0 0 4px}
+.offer-image{position:relative;aspect-ratio:1;overflow:hidden}
+.offer-image>img{display:block;width:100%;height:100%;object-fit:cover}
+.card-offer,.card-exclusive{cursor:pointer}
+.offer-image>img,.exclusive-image{transition:transform 350ms ease}
+.card-offer:hover .offer-image>img,.card-exclusive:hover .exclusive-image{transform:scale(1.1)}
+.offer-tag{position:absolute;left:20px;bottom:20.33px;height:36px;padding:6px 18px 7px;display:flex;align-items:center;justify-content:center;background:#fff;border-radius:20px;font:500 14px/1.35 "Montserrat",sans-serif;white-space:nowrap}
+.offer-copy{display:flex;flex-direction:column;align-items:flex-start;gap:12px;margin-top:32px;padding:0 20px}
+.offer-copy h3{font:750 30px/1 "Roboto Flex",sans-serif;letter-spacing:-1.5px;font-stretch:140%;font-variation-settings:"opsz" 144,"wdth" 140}
+.offer-discount{font:400 20px/1.4 "Geologica",sans-serif;color:rgba(17,17,17,.6)}
+.offer-discount strong{font-weight:700}
+.market-action{display:inline-flex;align-items:center;gap:8px;color:#202126;font:500 16px/1 "Geologica",sans-serif;letter-spacing:-.32px;white-space:nowrap}
+.market-action img{display:block;flex:0 0 auto}
+.offers-arrow{position:absolute;top:248px;width:64px;height:64px;border:0;padding:0;background:none;cursor:default}
+.offers-arrow img{display:block}
+.offers-arrow--previous{left:-90px}
+.offers-arrow--previous img{transform:scaleX(-1)}
+.offers-arrow--next{right:-90px}
+.products-section{min-height:709px}
+.products-section .market-section-heading{grid-template-columns:784px 364px}
+.products-section .market-section-description{padding-top:0;transform:translateY(-3px);color:#000}
+.products-row{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:50px;margin-top:97px}
+.card-exclusive{display:flex;flex-direction:column;gap:16px;align-items:flex-start;min-width:0}
+.exclusive-image{display:block;width:100%;height:auto;aspect-ratio:1;object-fit:cover}
+.exclusive-image-frame{width:100%;aspect-ratio:1;overflow:hidden;flex-shrink:0}
+.card-exclusive h3{font:750 24px/1 "Roboto Flex",sans-serif;letter-spacing:-1.2px;font-stretch:140%;font-variation-settings:"opsz" 144,"wdth" 140}
+.card-exclusive p{font:400 16px/1.2 "Geologica",sans-serif;color:rgba(23,23,23,.6)}
+.market-news-row{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:48px;align-items:start;margin-top:48px}
+.card-market-news{display:flex;flex-direction:column;gap:24px;align-items:flex-start;padding:48px 40px;background:#fceee3}
+.card-market-news time{font:400 16px/1.35 "Geologica",sans-serif;color:rgba(23,23,23,.5)}
+.card-market-news h3{font:400 20px/1.35 "Geologica",sans-serif}
+:is(.card-offer,.card-exclusive,.card-market-news) :is(h3,p,time,.market-action,.offer-tag){transition:color 350ms ease}
+:is(.card-offer,.card-exclusive,.card-market-news):hover :is(h3,p,time,.market-action,.offer-tag){color:#912c0e}
+@media(prefers-reduced-motion:reduce){.market-intro{transition:none;transform:none}.offer-image>img,.exclusive-image{transition:none}}
