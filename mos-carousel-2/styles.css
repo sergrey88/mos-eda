@@ -29,6 +29,11 @@ h1{margin:0;color:#df2836;font:600 280px/.8 "Roboto Flex",sans-serif;text-align:
   transform: translateY(30px) scale(.86);
   transition: opacity 650ms ease-in-out, transform 650ms cubic-bezier(.4, 0, .2, 1);
 }
+.hero-food .hero-food-projects {
+  inset: 30px auto auto 102px;
+  width: 483px;
+  height: auto;
+}
 .hero-food .hero-food-default {
   opacity: 1;
   transform: none;
