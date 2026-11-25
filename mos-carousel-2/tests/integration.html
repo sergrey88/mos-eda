@@ -34,7 +34,7 @@ check('После вступления все 14 карточек видимы',
 check('Фотографии идут в порядке 1–14',cards().every((e,i)=>e.querySelector('img').getAttribute('src')===`assets/food/${i+1}.jpg`));
 check('Шапка из mos-carousel-3 имеет высоту 64px вне масштабируемой сцены',doc.querySelector('#mos-header').getBoundingClientRect().height===64&&!doc.querySelector('.artboard').contains(doc.querySelector('#mos-header')));
 check('Заголовок остаётся видимым',opacity('.title-line')===1);
-check('Все фотографии и иконки загружены',Array.from(doc.images).every(e=>e.complete&&e.naturalWidth>0));
+check('Все фотографии и иконки первого экрана загружены',Array.from(doc.querySelectorAll('#mos-header img, .hero img')).every(e=>e.complete&&e.naturalWidth>0));
 check('Есть карточки перед заголовком и за ним',cards().some(e=>+e.style.zIndex<20)&&cards().some(e=>+e.style.zIndex>30));
 check('Якоря и описание имеют шрифт 16px',win.getComputedStyle(doc.querySelector('.anchor-nav-item')).fontSize==='16px'&&win.getComputedStyle(doc.querySelector('.intro')).fontSize==='16px');
 check('Геометрия текста соответствует Figma',doc.querySelector('.title-line--top').offsetTop===80&&doc.querySelector('.title-line--bottom').offsetTop===330&&doc.querySelector('.intro').offsetTop===80&&doc.querySelector('.anchor-nav').offsetTop===255);

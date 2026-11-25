@@ -8,7 +8,7 @@ const motion=new OrbitMotion({reduced:reduced.matches});
 let scale=1,ready=false,elapsed=reduced.matches?4.05:0,lastFrame=null,pointerId=null,lastClientX=0;
 
 function resize(){
-  const layout=screenLayout(innerWidth,innerHeight);
+  const layout=screenLayout(document.documentElement.clientWidth,innerHeight);
   scale=layout.scale;
   document.documentElement.style.setProperty('--scale',scale);
   document.documentElement.style.setProperty('--board-left',`${layout.left}px`);
@@ -90,7 +90,7 @@ async function init(){
     document.fonts.load('600 280px "Roboto Flex"'),
     document.fonts.load('400 16px "Geologica"'),
     document.fonts.load('400 16px "Golos Text"'),
-    ...[...document.images].map(img=>img.decode()),
+    ...[...document.querySelectorAll('#mos-header img, .hero img')].map(img=>img.decode()),
   ]);
   if(resources.some(result=>result.status==='rejected')){
     const error=document.querySelector('.error');
